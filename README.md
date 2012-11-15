@@ -8,7 +8,7 @@ Modules
 
 Currently, there are a number of modules devised for this project:
 
-* [**reflection**](reflection/README.md); will help you handle your reflection needs. This is not &mdash; in any way &mdash; an attempt to replicate what
+* **reflection**; will help you handle your reflection needs. This is not &mdash; in any way &mdash; an attempt to replicate what
 [Javassist][1] does.  Rather, it is designed to help you with more high-level tasks, such as wrapping beans of unknown
 types, comparing two or more beans, accessing properties within fields in any given bean, etc.
 
