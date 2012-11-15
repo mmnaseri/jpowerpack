@@ -2,6 +2,8 @@ package com.agileapes.powerpack.tools.collections;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -32,6 +34,12 @@ public abstract class CollectionUtils {
             result.add(mapper.map(e));
         }
         return result;
+    }
+
+    public static <T> Set<T> asSet(T ... array) {
+        final HashSet<T> set = new HashSet<T>();
+        Collections.addAll(set, array);
+        return set;
     }
 
 }

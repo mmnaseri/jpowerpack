@@ -40,7 +40,7 @@ public abstract class ReflectionUtils {
     }
 
     public static String getPropertyName(String accessorName) {
-        if (accessorName.matches("get|set[A-Z].*")) {
+        if (accessorName.matches("(get|set)[A-Z].*")) {
             accessorName = accessorName.substring(3);
         } else if (accessorName.matches("is[A-Z].*")) {
             accessorName = accessorName.substring(2);
