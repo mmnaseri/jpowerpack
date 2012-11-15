@@ -27,7 +27,7 @@ public class FieldBeanWrapper<B> extends AccessorBeanWrapper<B> {
         final Field[] fields = ReflectionUtils.getFields(getBeanType(), new NamedPropertyFilter(propertyName));
         Throwable exception = null;
         for (Field field : fields) {
-            if (field.getType().isInstance(propertyValue)) {
+            if (propertyValue == null || field.getType().isInstance(propertyValue)) {
                 field.setAccessible(true);
                 try {
                     field.set(getBean(), propertyValue);
