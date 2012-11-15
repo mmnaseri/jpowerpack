@@ -34,6 +34,17 @@ public abstract class CollectionUtils {
         return makeMap(mapper, collection);
     }
 
+    public static <K, V> Map<K, V> changeKeys(Map<K, V> original, ItemRelocationCallback<K, V> relocator) {
+        final Map<K, V> map = new HashMap<K, V>();
+        for (K key : original.keySet()) {
+            final V value = original.get(key);
+            map.put(relocator.relocate(key, value), value);
+        }
+        original.clear();
+        original.putAll(map);
+        return original;
+    }
+
     public static <T, E> Collection<T> map(ItemMapper<E, T> mapper, E ... array) {
         return map(mapper, new CopyOnWriteArrayList<E>(array));
     }
@@ -50,6 +61,45 @@ public abstract class CollectionUtils {
         final HashSet<T> set = new HashSet<T>();
         Collections.addAll(set, array);
         return set;
+    }
+
+    public static final class MapBuilder<K, V> {
+
+        private final Map<K, V> map;
+        private K[] keys;
+
+        private MapBuilder() {
+            this(new ConcurrentHashMap<K, V>());
+        }
+
+        public MapBuilder(Map<K, V> map) {
+            this.map = map;
+        }
+
+        public MapBuilder<K, V> keys(K ... keys) {
+            this.keys = keys;
+            return this;
+        }
+
+        public Map<K, V> values(V ... values) {
+            if (keys.length != values.length) {
+                throw new IllegalStateException();
+            }
+            for (int i = 0; i < keys.length; i++) {
+                K key = keys[i];
+                map.put(key, values[i]);
+            }
+            return map;
+        }
+
+    }
+
+    public static <K, V> MapBuilder<K, V> mapOf(Class<K> keyType, Class<V> valueType) {
+        return new MapBuilder<K, V>();
+    }
+
+    public static <K, V> MapBuilder<K, V> mapOf(Map<K, V> map) {
+        return new MapBuilder<K, V>(map);
     }
 
 }

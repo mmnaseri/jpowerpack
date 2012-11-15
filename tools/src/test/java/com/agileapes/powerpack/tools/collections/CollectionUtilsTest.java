@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,6 +69,33 @@ public class CollectionUtilsTest {
         }
         for (Integer integer : squares.keySet()) {
             Assert.assertTrue(integers.contains(squares.get(integer)));
+        }
+    }
+
+    @Test
+    public void testKeyRelocation() throws Exception {
+        final Map<Integer, String> map = CollectionUtils.mapOf(new HashMap<Integer, String>()).keys(1, 2, 3, 4)
+                .values("2", "4", "6", "8");
+        CollectionUtils.changeKeys(map, new ItemRelocationCallback<Integer, String>() {
+            @Override
+            public Integer relocate(Integer key, String value) {
+                return key * 2;
+            }
+        });
+        for (Integer integer : map.keySet()) {
+            Assert.assertEquals(map.get(integer), integer.toString());
+        }
+    }
+
+    @Test
+    public void testMapBuilder() throws Exception {
+        final String[] keys = {"a", "b", "c"};
+        final Integer[] values = {1, 2, 3};
+        final Map<String, Integer> map = CollectionUtils.mapOf(String.class, Integer.class).keys(keys).values(values);
+        Assert.assertEquals(map.size(), keys.length);
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i];
+            Assert.assertEquals(map.get(key), values[i]);
         }
     }
 }
