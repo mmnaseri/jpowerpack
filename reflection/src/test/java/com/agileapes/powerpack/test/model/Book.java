@@ -7,7 +7,7 @@ package com.agileapes.powerpack.test.model;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 14:00)
  */
-public class Book {
+public class Book extends Printable {
 
     private String title;
     private String author;

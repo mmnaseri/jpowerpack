@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,7 +30,17 @@ public class CollectionUtilsTest {
 
     @Test
     public void testMap() throws Exception {
-
+        final Set<Integer> integers = CollectionUtils.asSet(1, 2, 3);
+        final Collection<String> strings = CollectionUtils.map(new ItemMapper<Integer, String>() {
+            @Override
+            public String map(Integer integer) {
+                return integer.toString();
+            }
+        }, integers);
+        Assert.assertEquals(strings.size(), integers.size());
+        for (Integer integer : integers) {
+            Assert.assertTrue(strings.contains(integer.toString()));
+        }
     }
 
     @Test
@@ -42,4 +53,21 @@ public class CollectionUtilsTest {
         }
     }
 
+    @Test
+    public void testMakeMap() throws Exception {
+        final Set<Integer> integers = CollectionUtils.asSet(100, 400, 900);
+        Map<Integer, Integer> squares = CollectionUtils.makeMap(new ItemMapper<Integer, Integer>() {
+            @Override
+            public Integer map(Integer integer) {
+                return (int) Math.floor(Math.sqrt(integer));
+            }
+        }, integers);
+        Assert.assertEquals(squares.size(), integers.size());
+        for (Integer integer : integers) {
+            Assert.assertTrue(squares.containsValue(integer));
+        }
+        for (Integer integer : squares.keySet()) {
+            Assert.assertTrue(integers.contains(squares.get(integer)));
+        }
+    }
 }

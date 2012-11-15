@@ -1,9 +1,7 @@
 package com.agileapes.powerpack.tools.collections;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -22,10 +20,22 @@ public abstract class CollectionUtils {
         return result;
     }
 
-    public static <T, E> Collection<T> map(ItemMapper<E, T> mapper, E ... array) {
-        final Collection<E> collection = new CopyOnWriteArrayList<E>(array);
+    public static <K, E> Map<K, E> makeMap(ItemMapper<E, K> mapper, Collection<E> collection) {
+        final Map<K, E> map = new ConcurrentHashMap<K, E>();
+        for (E item : collection) {
+            map.put(mapper.map(item), item);
+        }
+        return map;
+    }
+
+    public static <K, E> Map<K, E> makeMap(ItemMapper<E, K> mapper, E ... array) {
+        final ArrayList<E> collection = new ArrayList<E>();
         Collections.addAll(collection, array);
-        return map(mapper, collection);
+        return makeMap(mapper, collection);
+    }
+
+    public static <T, E> Collection<T> map(ItemMapper<E, T> mapper, E ... array) {
+        return map(mapper, new CopyOnWriteArrayList<E>(array));
     }
 
     public static <T, E> Collection<T> map(ItemMapper<E, T> mapper, Collection<E> collection) {

@@ -29,7 +29,7 @@ public abstract class ReflectionUtils {
     public static Field[] getFields(Class<?> type, PropertyFilter filter) {
         final ArrayList<Field> fields = new ArrayList<Field>();
         for (Field field : type.getDeclaredFields()) {
-            if (filter.accept(field.getName(), field.getType())) {
+            if (filter.accept(field)) {
                 fields.add(field);
             }
         }

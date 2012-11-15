@@ -29,7 +29,7 @@ public class ClassBeanDescriptor<B> implements BeanDescriptor<B>, AccessMethodAw
         properties = CollectionUtils.map(new ItemMapper<Method, String>() {
             @Override
             public String map(Method method) {
-                return method.getName();
+                return ReflectionUtils.getPropertyName(method.getName());
             }
         }, getters);
         for (Method getter : getters) {

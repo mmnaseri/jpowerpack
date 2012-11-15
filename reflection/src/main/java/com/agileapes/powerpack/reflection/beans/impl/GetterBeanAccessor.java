@@ -6,6 +6,7 @@ import com.agileapes.powerpack.reflection.exceptions.NoSuchPropertyException;
 import com.agileapes.powerpack.reflection.exceptions.PropertyReadAccessException;
 import com.agileapes.powerpack.reflection.tools.ReflectionUtils;
 import com.agileapes.powerpack.reflection.tools.impl.ReadAccessMethodFilter;
+import com.agileapes.powerpack.tools.collections.*;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -21,19 +22,40 @@ public class GetterBeanAccessor<B> implements BeanAccessor<B>, AccessMethodAware
 
     private final B bean;
     private final Map<String, Method> getters = new HashMap<String, Method>();
-    private final Map<String, Boolean> canWrite = new HashMap<String, Boolean>();
-    private final Map<String, PropertyAccessMethod> accessMethod = new HashMap<String, PropertyAccessMethod>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final Map<String, Boolean> canWrite = new LazilyInitializedMap<String, Boolean>(new CacheMissHandler<String, Boolean>() {
+        @Override
+        public Boolean handle(String key) {
+            return checkCanWrite(key);
+        }
+    });
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final Map<String, PropertyAccessMethod> accessMethod = new LazilyInitializedMap<String, PropertyAccessMethod>(new CacheMissHandler<String, PropertyAccessMethod>() {
+        @Override
+        public PropertyAccessMethod handle(String key) {
+            return determineAccessMethod(key);
+        }
+    });
 
     public GetterBeanAccessor(B bean) {
         this.bean = bean;
         initialize();
+        mark();
     }
 
     protected void initialize() {
-        final Method[] methods = ReflectionUtils.getMethods(getBeanType(), new ReadAccessMethodFilter());
-        for (Method method : methods) {
-            getters.put(ReflectionUtils.getPropertyName(method.getName()), method);
-        }
+        getters.putAll(CollectionUtils.makeMap(new ItemMapper<Method, String>() {
+            @Override
+            public String map(Method method) {
+                return ReflectionUtils.getPropertyName(method.getName());
+            }
+        }, ReflectionUtils.getMethods(getBeanType(), new ReadAccessMethodFilter())));
+        mark();
+    }
+
+    private void mark() {
+        ((LazilyInitializedMap<String, Boolean>) canWrite).markAll(getProperties());
+        ((LazilyInitializedMap<String, PropertyAccessMethod>) accessMethod).markAll(getProperties());
     }
 
     @Override
@@ -86,20 +108,18 @@ public class GetterBeanAccessor<B> implements BeanAccessor<B>, AccessMethodAware
 
     @Override
     public boolean canWrite(String propertyName) throws NoSuchPropertyException {
-        if (canWrite.containsKey(propertyName)) {
-            return canWrite.get(propertyName);
+        if (!hasProperty(propertyName)) {
+            throw new NoSuchPropertyException(propertyName);
         }
-        canWrite.put(propertyName, checkCanWrite(propertyName));
-        return canWrite(propertyName);
+        return canWrite.get(propertyName);
     }
 
     @Override
     public PropertyAccessMethod getAccessMethod(String propertyName) throws NoSuchPropertyException {
-        if (accessMethod.containsKey(propertyName)) {
-            return accessMethod.get(propertyName);
+        if (!hasProperty(propertyName)) {
+            throw new NoSuchPropertyException(propertyName);
         }
-        accessMethod.put(propertyName, determineAccessMethod(propertyName));
-        return getAccessMethod(propertyName);
+        return accessMethod.get(propertyName);
     }
 
     protected boolean checkCanWrite(String propertyName) {
@@ -120,7 +140,7 @@ public class GetterBeanAccessor<B> implements BeanAccessor<B>, AccessMethodAware
     }
 
     protected PropertyAccessMethod determineAccessMethod(String propertyName) {
-        return accessMethod.get(propertyName);
+        return new PropertyAccessMethod(propertyName, AccessType.METHOD, getters.get(propertyName).getName());
     }
 
 }

@@ -1,8 +1,10 @@
 package com.agileapes.powerpack.reflection.beans.impl;
 
 import com.agileapes.powerpack.reflection.exceptions.PropertyReadAccessException;
-import com.agileapes.powerpack.reflection.tools.PropertyFilter;
 import com.agileapes.powerpack.reflection.tools.ReflectionUtils;
+import com.agileapes.powerpack.reflection.tools.impl.PatternPropertyFilter;
+import com.agileapes.powerpack.tools.collections.CollectionUtils;
+import com.agileapes.powerpack.tools.collections.ItemMapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -17,7 +19,7 @@ import java.util.Map;
  */
 public class FieldBeanAccessor<B> extends GetterBeanAccessor<B> {
 
-    private final Map<String, Field> fields = new HashMap<String, Field>();
+    private Map<String, Field> fields;
 
     public FieldBeanAccessor(B bean) {
         super(bean);
@@ -25,12 +27,17 @@ public class FieldBeanAccessor<B> extends GetterBeanAccessor<B> {
 
     @Override
     protected void initialize() {
-        final Field[] properties = ReflectionUtils.getFields(getBeanType(), PropertyFilter.ALL);
-        for (Field property : properties) {
-            if (!Modifier.isFinal(property.getModifiers()) && !Modifier.isStatic(property.getModifiers())) {
-                fields.put(property.getName(), property);
+        fields = CollectionUtils.makeMap(new ItemMapper<Field, String>() {
+            @Override
+            public String map(Field field) {
+                return field.getName();
             }
-        }
+        }, ReflectionUtils.getFields(getBeanType(), new PatternPropertyFilter(".*") {
+            @Override
+            public boolean accept(Field field) {
+                return super.accept(field) && !Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers());
+            }
+        }));
     }
 
     @Override
