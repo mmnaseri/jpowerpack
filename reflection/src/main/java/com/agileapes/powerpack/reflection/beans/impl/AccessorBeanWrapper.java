@@ -1,5 +1,6 @@
 package com.agileapes.powerpack.reflection.beans.impl;
 
+import com.agileapes.powerpack.reflection.beans.AccessMethodAware;
 import com.agileapes.powerpack.reflection.beans.BeanAccessor;
 import com.agileapes.powerpack.reflection.beans.BeanWrapper;
 import com.agileapes.powerpack.reflection.exceptions.NoSuchPropertyException;
@@ -14,7 +15,7 @@ import java.util.Collection;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 2:00)
  */
-public class AccessorBeanWrapper<B> implements BeanWrapper<B> {
+public class AccessorBeanWrapper<B> implements BeanWrapper<B>, AccessMethodAware {
     
     private final B bean;
     private final BeanAccessor<B> accessor;
@@ -82,6 +83,11 @@ public class AccessorBeanWrapper<B> implements BeanWrapper<B> {
         } catch (Throwable e) {
             throw new PropertyWriteAccessException(propertyName, e);
         }
+    }
+
+    @Override
+    public PropertyAccessMethod getAccessMethod(String propertyName) throws NoSuchPropertyException {
+        return ((AccessMethodAware) accessor).getAccessMethod(propertyName);
     }
 
 }

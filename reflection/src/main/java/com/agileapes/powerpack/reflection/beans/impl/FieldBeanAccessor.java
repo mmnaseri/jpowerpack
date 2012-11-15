@@ -60,4 +60,9 @@ public class FieldBeanAccessor<B> extends GetterBeanAccessor<B> {
         return true;
     }
 
+    @Override
+    protected PropertyAccessMethod determineAccessMethod(String propertyName) {
+        return new PropertyAccessMethod(propertyName, AccessType.FIELD, propertyName);
+    }
+
 }

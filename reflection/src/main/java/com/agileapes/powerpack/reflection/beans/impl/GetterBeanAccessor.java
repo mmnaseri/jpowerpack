@@ -1,5 +1,6 @@
 package com.agileapes.powerpack.reflection.beans.impl;
 
+import com.agileapes.powerpack.reflection.beans.AccessMethodAware;
 import com.agileapes.powerpack.reflection.beans.BeanAccessor;
 import com.agileapes.powerpack.reflection.exceptions.NoSuchPropertyException;
 import com.agileapes.powerpack.reflection.exceptions.PropertyReadAccessException;
@@ -16,11 +17,12 @@ import java.util.Map;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 1:44)
  */
-public class GetterBeanAccessor<B> implements BeanAccessor<B> {
+public class GetterBeanAccessor<B> implements BeanAccessor<B>, AccessMethodAware {
 
     private final B bean;
     private final Map<String, Method> getters = new HashMap<String, Method>();
     private final Map<String, Boolean> canWrite = new HashMap<String, Boolean>();
+    private final Map<String, PropertyAccessMethod> accessMethod = new HashMap<String, PropertyAccessMethod>();
 
     public GetterBeanAccessor(B bean) {
         this.bean = bean;
@@ -91,6 +93,15 @@ public class GetterBeanAccessor<B> implements BeanAccessor<B> {
         return canWrite(propertyName);
     }
 
+    @Override
+    public PropertyAccessMethod getAccessMethod(String propertyName) throws NoSuchPropertyException {
+        if (accessMethod.containsKey(propertyName)) {
+            return accessMethod.get(propertyName);
+        }
+        accessMethod.put(propertyName, determineAccessMethod(propertyName));
+        return getAccessMethod(propertyName);
+    }
+
     protected boolean checkCanWrite(String propertyName) {
         return ReflectionUtils.getSetter(getBeanType(), propertyName) != null;
     }
@@ -106,6 +117,10 @@ public class GetterBeanAccessor<B> implements BeanAccessor<B> {
         } catch (Throwable e) {
             throw new PropertyReadAccessException(propertyName, e);
         }
+    }
+
+    protected PropertyAccessMethod determineAccessMethod(String propertyName) {
+        return accessMethod.get(propertyName);
     }
 
 }
