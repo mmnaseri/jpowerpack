@@ -15,4 +15,11 @@ types, comparing two or more beans, accessing properties within fields in any gi
 * **tools**; will contain more of round-the-block sort of utilities that will come in handy throughout your development
 life.
 
+IDE and Tools
+-------------
+
+This project has been developed in [IntelliJ IDEA][2] &trade; and thus, there are references to its special files
+under `.gitignore`.
+
 [1]: <http://www.javassist.org/> (The Javassist Project Home)
+[2]: <http://www.jetbrains.com/idea> (The IntelliJ IDEA Home)
