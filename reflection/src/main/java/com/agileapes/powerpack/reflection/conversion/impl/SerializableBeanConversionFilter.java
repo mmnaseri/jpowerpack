@@ -20,6 +20,9 @@ import com.agileapes.powerpack.reflection.conversion.ConversionFilter;
 import java.io.Serializable;
 
 /**
+ * This filter will leave out the conversion of anything that is already a serializable item, only
+ * mandating the conversion of all those other things that are not already serializable
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */

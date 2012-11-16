@@ -22,6 +22,9 @@ import com.agileapes.powerpack.reflection.conversion.TypedBeanConverter;
 import com.agileapes.powerpack.reflection.exceptions.ConversionFailureException;
 
 /**
+ * This bean converter will configure the conversion process, but does not provide the specifics,
+ * and as such, needs to remain abstract.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */

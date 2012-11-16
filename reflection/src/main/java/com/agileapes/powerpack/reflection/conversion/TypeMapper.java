@@ -15,11 +15,19 @@
 package com.agileapes.powerpack.reflection.conversion;
 
 /**
+ * This interface is provided to allow users (also developers of the engine) to substitute one type
+ * with another mapped type, whenever necessary.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (8/2/12)
  */
 public interface TypeMapper {
 
+    /**
+     * This method will provide an equivalent type for the given input type
+     * @param type    the input type
+     * @return the mapped type
+     */
     Class<?> getType(Class<?> type);
 
 }

@@ -19,6 +19,9 @@ import com.agileapes.powerpack.reflection.conversion.ConversionFilter;
 import com.agileapes.powerpack.reflection.exceptions.ConversionFailureException;
 
 /**
+ * This implementation will create a serializable version of the bean passed to it. After this, you can
+ * save your serializable copy via object serialization mechanisms.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */

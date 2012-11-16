@@ -18,6 +18,9 @@ import com.agileapes.powerpack.reflection.beans.ConfigurableBean;
 import com.agileapes.powerpack.reflection.conversion.ConversionFilter;
 
 /**
+ * This conversion filter will allow absolutely everything to be included, and will approve of the
+ * conversion of every possible property type
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */

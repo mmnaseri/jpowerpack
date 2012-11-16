@@ -18,6 +18,8 @@ import com.agileapes.powerpack.reflection.beans.ConfigurableBean;
 import com.agileapes.powerpack.reflection.conversion.ConversionFilter;
 
 /**
+ * This filter will leave out {@link Class} type properties and prevent the conversion of primitives
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (8/2/12)
  */

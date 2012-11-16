@@ -29,6 +29,10 @@ import com.agileapes.powerpack.reflection.exceptions.ConversionFailureException;
 import java.util.*;
 
 /**
+ * This class will take a {@link BeanAccessor} and then convert it to an instance of the
+ * specified type. If you provide a {@link BeanWrapper} as the target type, then the engine
+ * will have an easier time of converting things.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (8/1/12)
  */

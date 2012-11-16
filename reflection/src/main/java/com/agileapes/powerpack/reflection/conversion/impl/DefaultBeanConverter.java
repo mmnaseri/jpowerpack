@@ -24,6 +24,8 @@ import com.agileapes.powerpack.reflection.exceptions.NoSuchPropertyException;
 import com.agileapes.powerpack.reflection.exceptions.PropertyAccessException;
 
 /**
+ * This implementation provides a solid framework for converting anything to a {@link ConfigurableBean}
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/30/12)
  */

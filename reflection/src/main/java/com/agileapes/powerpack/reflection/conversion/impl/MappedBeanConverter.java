@@ -20,6 +20,10 @@ import com.agileapes.powerpack.reflection.conversion.ConversionFilter;
 import com.agileapes.powerpack.reflection.exceptions.ConversionFailureException;
 
 /**
+ * This converter will take an object and create a deeply traversed mapped wrapper instance.
+ * After this, calling {@link com.agileapes.powerpack.reflection.beans.impl.MappedBeanWrapper#getBean()}
+ * will enable you to access a map of all the properties in this object
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */
