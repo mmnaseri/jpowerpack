@@ -4,7 +4,7 @@ package com.agileapes.powerpack.reflection.exceptions;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:28)
  */
-public class NoSuchPropertyException extends BeansException {
+public class NoSuchPropertyException extends GeneralBeansException {
 
     private final String propertyName;
     private final Class<?> propertyType;

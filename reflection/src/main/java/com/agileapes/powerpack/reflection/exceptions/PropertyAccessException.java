@@ -4,7 +4,7 @@ package com.agileapes.powerpack.reflection.exceptions;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:35)
  */
-public abstract class PropertyAccessException extends BeansException {
+public abstract class PropertyAccessException extends GeneralBeansException {
 
     private final String propertyName;
 

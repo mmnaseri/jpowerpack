@@ -6,6 +6,6 @@ package com.agileapes.powerpack.reflection.beans;
  */
 public interface BeanAccessorFactory {
 
-    <A extends BeanAccessor<B>, B> A getBeanAccessor(B object);
+    <B> BeanAccessor<B> getBeanAccessor(B object);
 
 }
