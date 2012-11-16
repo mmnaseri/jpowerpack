@@ -15,11 +15,20 @@
 package com.agileapes.powerpack.reflection.beans.impl;
 
 /**
+ * This enum holds the different access types defined for a given property
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:40)
  */
 public enum AccessType {
 
-    METHOD, FIELD
+    /**
+     * This means that an accessor method will be used to read property values
+     */
+    METHOD,
+    /**
+     * This means that the class fields themselves are the means to property values
+     */
+    FIELD
 
 }

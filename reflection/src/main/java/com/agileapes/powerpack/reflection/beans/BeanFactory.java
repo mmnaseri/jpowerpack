@@ -15,11 +15,21 @@
 package com.agileapes.powerpack.reflection.beans;
 
 /**
+ * This is a factory bean that will return instances of other beans, given their types.
+ * This is here mainly as a way of integrating with Spring framework's bean initialization
+ * interfaces.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/16, 18:42)
  */
 public interface BeanFactory {
 
+    /**
+     * Will return a (pre-configured) instance of the given type
+     * @param targetType    desired type
+     * @param <T>           the instance type
+     * @return object instance
+     */
     <T> T getBean(Class<T> targetType);
 
 }

@@ -26,6 +26,9 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
+ * This implementation will access property values through their defined getter and setter methods
+ * as defined by the Java&trade; bean specification.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 2:00)
  */

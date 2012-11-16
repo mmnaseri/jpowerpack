@@ -18,6 +18,8 @@ import com.agileapes.powerpack.reflection.beans.BeanWrapper;
 import com.agileapes.powerpack.reflection.beans.BeanWrapperFactory;
 
 /**
+ * This factory will produce instances of {@link AccessorBeanWrapper}
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 23:26)
  */

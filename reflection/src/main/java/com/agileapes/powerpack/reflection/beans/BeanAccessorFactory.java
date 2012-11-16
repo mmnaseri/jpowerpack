@@ -15,11 +15,22 @@
 package com.agileapes.powerpack.reflection.beans;
 
 /**
+ * This factory will return accessors for any given object.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 17:45)
+ * @see BeanAccessor
+ * @see com.agileapes.powerpack.reflection.beans.impl.GetterBeanAccessor
+ * @see com.agileapes.powerpack.reflection.beans.impl.FieldBeanAccessor
  */
 public interface BeanAccessorFactory {
 
+    /**
+     * Will return a (cached) wrapper for the given object
+     * @param object    the object to be accessed through a wrapper
+     * @param <B>       bean type
+     * @return accessor for the given bean
+     */
     <B> BeanAccessor<B> getBeanAccessor(B object);
 
 }

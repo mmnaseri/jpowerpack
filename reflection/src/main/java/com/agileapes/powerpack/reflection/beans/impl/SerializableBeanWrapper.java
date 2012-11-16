@@ -21,6 +21,9 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * This implementation will wrap the given bean (with some help from {@link MappedBeanWrapper}) and
+ * then make that (already serializable) map the serializable facade of the whole object.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */

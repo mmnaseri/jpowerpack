@@ -18,6 +18,8 @@ import com.agileapes.powerpack.reflection.beans.BeanAccessor;
 import com.agileapes.powerpack.reflection.beans.BeanAccessorFactory;
 
 /**
+ * This factory will produce instance of {@link GetterBeanAccessor}
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/16, 18:36)
  */

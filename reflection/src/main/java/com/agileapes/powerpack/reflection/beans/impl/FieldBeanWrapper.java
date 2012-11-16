@@ -22,6 +22,10 @@ import com.agileapes.powerpack.reflection.tools.impl.NamedPropertyFilter;
 import java.lang.reflect.Field;
 
 /**
+ * This wrapper will read and write property values by accessing the fields themselves, violating the
+ * Java&trade; beans specification, and thus, foregoing any (possible) configuration done to property
+ * values through their accessor methods.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 2:05)
  */

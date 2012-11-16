@@ -24,6 +24,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * This bean wrapper will hold an internal map of the given object, which can be later
+ * accessed via {@link #getBean()}
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */

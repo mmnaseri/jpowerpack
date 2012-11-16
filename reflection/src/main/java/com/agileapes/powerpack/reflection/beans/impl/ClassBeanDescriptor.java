@@ -26,6 +26,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
+ * This descriptor will wrap a given class object, not the instances themselves, telling you exactly
+ * what accessible properties they offer, and which of them is writable
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:56)
  */

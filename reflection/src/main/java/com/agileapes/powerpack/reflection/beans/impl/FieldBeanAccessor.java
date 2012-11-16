@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * This implementation will access the class fields themselves, thus, violating the
+ * Java&trade; beans specification. However, at times, this might come in handy.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 1:55)
  */

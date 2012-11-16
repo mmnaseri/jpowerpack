@@ -15,6 +15,8 @@
 package com.agileapes.powerpack.reflection.beans.impl;
 
 /**
+ * This class holds the definition of accessing a property within a class's instance object.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:39)
  */

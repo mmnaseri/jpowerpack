@@ -18,11 +18,21 @@ import com.agileapes.powerpack.reflection.beans.impl.PropertyAccessMethod;
 import com.agileapes.powerpack.reflection.exceptions.NoSuchPropertyException;
 
 /**
+ * An <code>AccessMethodAware</code> class is a class that can tell you how its properties are
+ * being accessed, whether through an accessor method of a specific name, or through the fields
+ * themselves.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:41)
  */
 public interface AccessMethodAware {
 
+    /**
+     * This method will return the access method for the given property
+     * @param propertyName    the name of the queried property
+     * @return the access method
+     * @throws NoSuchPropertyException if no such property is registered with the implementing class
+     */
     PropertyAccessMethod getAccessMethod(String propertyName) throws NoSuchPropertyException;
 
 }

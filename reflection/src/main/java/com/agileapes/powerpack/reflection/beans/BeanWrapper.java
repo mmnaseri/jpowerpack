@@ -15,6 +15,9 @@
 package com.agileapes.powerpack.reflection.beans;
 
 /**
+ * This interface brings together {@link BeanAccessor} and {@link ConfigurableBean}
+ * and gives you the power of reading and writing to a wrapped bean
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:33)
  */

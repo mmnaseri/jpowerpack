@@ -15,11 +15,21 @@
 package com.agileapes.powerpack.reflection.beans;
 
 /**
+ * This interface is left as an initializer used by the outside world that can handle var-args
+ * initialization of beans, through their available constructors.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:32)
  */
-public interface BeanInitializer<B> {
+public interface BeanInitializer {
 
-    B initialize(Object ... arguments);
+    /**
+     * This method will request that a bean with the given constructor arguments to be initialized
+     * @param type         the type of the object
+     * @param arguments    arguments to be passed to the constructor
+     * @param <B>          generic-bound instance type
+     * @return the configured instance
+     */
+    <B> B initialize(Class<B> type, Object ... arguments);
 
 }
