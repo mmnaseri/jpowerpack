@@ -15,11 +15,19 @@
 package com.agileapes.powerpack.tools.collections;
 
 /**
+ * This interface will allow you to relocate a given item within a map, changing its key, without
+ * messing up the map
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 18:03)
  */
 public interface ItemRelocationCallback<K, V> {
 
+    /**
+     * @param key      original key
+     * @param value    the item
+     * @return new key
+     */
     K relocate(K key, V value);
 
 }

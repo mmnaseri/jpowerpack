@@ -20,6 +20,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * This implementation of the {@link Map} interface will take a {@link CacheMissHandler}
+ * and act as a cache. If the item being requested by {@link #get(Object)} does not exist
+ * inside the map, then a cache miss will be triggered.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 15:54)
  */

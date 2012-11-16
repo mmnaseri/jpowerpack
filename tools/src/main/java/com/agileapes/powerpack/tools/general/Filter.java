@@ -12,14 +12,22 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.powerpack.tools.collections;
+package com.agileapes.powerpack.tools.general;
 
 /**
+ * This interface provides a general purpose way for defining a filter of any sort
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/11/15, 1:21)
+ * @since 1.0 (2012/11/17, 3:00)
  */
-public interface ItemSelector<E> {
+public interface Filter<E> {
 
-    boolean select(E item);
+    /**
+     * This method will be called whenever a decision needs to be made in regards to
+     * keeping an item or throwing it away
+     * @param item    the item to be examined.
+     * @return {@code true}, should mean that the item must remain
+     */
+    boolean accept(E item);
 
 }

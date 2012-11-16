@@ -14,6 +14,7 @@
 
 package com.agileapes.powerpack.tools.collections;
 
+import com.agileapes.powerpack.tools.general.Filter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,9 +32,9 @@ public class CollectionUtilsTest {
     @Test
     public void testFilter() throws Exception {
         final Set<Integer> original = CollectionUtils.asSet(1, 2, 3, 4, 5);
-        final Collection<? extends Integer> filtered = CollectionUtils.filter(original, new ItemSelector<Integer>() {
+        final Collection<? extends Integer> filtered = CollectionUtils.filter(original, new Filter<Integer>() {
             @Override
-            public boolean select(Integer item) {
+            public boolean accept(Integer item) {
                 return item > 3;
             }
         });
@@ -46,7 +47,7 @@ public class CollectionUtilsTest {
     @Test
     public void testMap() throws Exception {
         final Set<Integer> integers = CollectionUtils.asSet(1, 2, 3);
-        final Collection<String> strings = CollectionUtils.map(new ItemMapper<Integer, String>() {
+        final Collection<String> strings = CollectionUtils.pluck(new ItemMapper<Integer, String>() {
             @Override
             public String map(Integer integer) {
                 return integer.toString();

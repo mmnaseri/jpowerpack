@@ -15,6 +15,7 @@
 package com.agileapes.powerpack.reflection.tools;
 
 import com.agileapes.powerpack.reflection.tools.impl.PatternMethodFilter;
+import com.agileapes.powerpack.tools.general.Filter;
 
 import java.lang.reflect.Method;
 
@@ -24,15 +25,8 @@ import java.lang.reflect.Method;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:42)
  */
-public interface MethodFilter {
+public interface MethodFilter extends Filter<Method> {
 
     public final static MethodFilter ALL = new PatternMethodFilter(".*");
-
-    /**
-     * Must return {@code true} if a given method should be included in the query result
-     * @param method    the method to be examined
-     * @return {@code true} if method must be kept
-     */
-    boolean accept(Method method);
 
 }

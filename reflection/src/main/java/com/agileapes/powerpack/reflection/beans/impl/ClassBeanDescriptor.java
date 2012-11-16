@@ -43,7 +43,7 @@ public class ClassBeanDescriptor<B> implements BeanDescriptor<B>, AccessMethodAw
     public ClassBeanDescriptor(Class<B> beanClass) {
         this.beanClass = beanClass;
         final Method[] getters = ReflectionUtils.getMethods(beanClass, new ReadAccessMethodFilter());
-        properties = CollectionUtils.map(new ItemMapper<Method, String>() {
+        properties = CollectionUtils.pluck(new ItemMapper<Method, String>() {
             @Override
             public String map(Method method) {
                 return ReflectionUtils.getPropertyName(method.getName());

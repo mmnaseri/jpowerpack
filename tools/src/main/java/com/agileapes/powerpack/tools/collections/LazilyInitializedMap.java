@@ -21,6 +21,9 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
+ * This implementation will take a number of keys ({@link #mark(Object)} and {@link #markAll(java.util.Collection)})
+ * and allow for the actual values for these keys to be initialized at a later point.
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 16:02)
  */
@@ -79,6 +82,14 @@ public class LazilyInitializedMap<K, V> extends CachedMap<K, V> {
         return set;
     }
 
+    @Override
+    public Collection<V> values() {
+        for (K item : marked) {
+            //triggering the miss handler for marked items
+            get(item);
+        }
+        return super.values();
+    }
 
     public void mark(K key) {
         marked.add(key);

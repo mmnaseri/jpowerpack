@@ -15,11 +15,19 @@
 package com.agileapes.powerpack.tools.collections;
 
 /**
+ * This interface will provide a means for handling cases in which an item is requested that does
+ * not currently reside inside the cache
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 15:56)
  */
 public interface CacheMissHandler<K, V> {
 
+    /**
+     * This method is called whenever a miss has occurred for the provided key
+     * @param key    the key for which a miss has occurred.
+     * @return the value to be stored inside the cache for future use
+     */
     V handle(K key);
 
 }

@@ -15,11 +15,18 @@
 package com.agileapes.powerpack.tools.collections;
 
 /**
+ * This interface allows you to map a given item to a specific key
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 1:37)
  */
 public interface ItemMapper<E, T> {
 
+    /**
+     * Will be expected to specify a (new) key for the given item
+     * @param e    the item
+     * @return the key
+     */
     T map(E e);
 
 }

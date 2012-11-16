@@ -15,6 +15,7 @@
 package com.agileapes.powerpack.reflection.tools;
 
 import com.agileapes.powerpack.reflection.tools.impl.PatternPropertyFilter;
+import com.agileapes.powerpack.tools.general.Filter;
 
 import java.lang.reflect.Field;
 
@@ -24,14 +25,8 @@ import java.lang.reflect.Field;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 0:07)
  */
-public interface PropertyFilter {
+public interface PropertyFilter extends Filter<Field> {
 
     public final static PropertyFilter ALL = new PatternPropertyFilter(".*");
-
-    /**
-     * @param field    the field to be examined
-     * @return {@code true} if the given field must be included in the query results
-     */
-    boolean accept(Field field);
 
 }
