@@ -43,7 +43,7 @@ public class ReflectionUtilsTest {
     @Test
     public void testGetFields() throws Exception {
         final Field[] fields = ReflectionUtils.getFields(Book.class, PropertyFilter.ALL);
-        final Set<String> names = CollectionUtils.asSet("title", "author");
+        final Set<String> names = CollectionUtils.asSet("title", "author", "identifier", "DEFAULT_ID");
         Assert.assertEquals(fields.length, names.size());
         for (Field field : fields) {
             Assert.assertTrue(names.contains(field.getName()));
