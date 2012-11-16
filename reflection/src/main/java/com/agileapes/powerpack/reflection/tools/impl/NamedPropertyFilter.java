@@ -19,6 +19,8 @@ import com.agileapes.powerpack.reflection.tools.PropertyFilter;
 import java.lang.reflect.Field;
 
 /**
+ * This filter will only include a field with the given name
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 0:11)
  */

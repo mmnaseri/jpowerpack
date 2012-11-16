@@ -18,8 +18,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
+ * This filter will only include any method that matches the descriptions expected of a 'setter' method
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:47)
+ * @see ReadAccessMethodFilter
  */
 public class WriteAccessMethodFilter extends PatternMethodFilter {
 

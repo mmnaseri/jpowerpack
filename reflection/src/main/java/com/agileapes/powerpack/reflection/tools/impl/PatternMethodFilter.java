@@ -19,6 +19,8 @@ import com.agileapes.powerpack.reflection.tools.MethodFilter;
 import java.lang.reflect.Method;
 
 /**
+ * This filter will accept all methods matching any of the given patterns
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/14, 23:43)
  */

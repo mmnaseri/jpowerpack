@@ -19,6 +19,8 @@ import com.agileapes.powerpack.reflection.tools.PropertyFilter;
 import java.lang.reflect.Field;
 
 /**
+ * This filter will accept all fields matching any of the given patterns
+ *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/15, 0:08)
  */
