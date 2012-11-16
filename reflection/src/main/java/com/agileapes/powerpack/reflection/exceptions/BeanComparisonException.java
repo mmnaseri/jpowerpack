@@ -5,4 +5,12 @@ package com.agileapes.powerpack.reflection.exceptions;
  * @since 1.0 (2012/11/15, 22:17)
  */
 public class BeanComparisonException extends GeneralBeansException {
+
+    public BeanComparisonException() {
+    }
+
+    public BeanComparisonException(Throwable cause) {
+        super(cause);
+    }
+
 }

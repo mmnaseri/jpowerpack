@@ -111,7 +111,16 @@ public class CachedBeanComparator implements BeanComparator {
                 result.add(new FailedComparisonResult(property, e));
                 continue;
             }
-            final Set<ComparisonResult> comparisonResults = compareItems(comparisonStrategy, property, firstValue, secondValue);
+            final Set<ComparisonResult> comparisonResults;
+            try {
+                comparisonResults = compareItems(comparisonStrategy, property, firstValue, secondValue);
+            } catch (Throwable e) {
+                if (e instanceof BeanComparisonException) {
+                    throw (BeanComparisonException) e;
+                } else {
+                    throw new BeanComparisonException(e);
+                }
+            }
             result.addAll(comparisonResults);
         }
         //We will cache our result for further reference before returning it
