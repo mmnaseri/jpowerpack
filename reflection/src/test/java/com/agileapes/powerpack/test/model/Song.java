@@ -24,6 +24,7 @@ public class Song {
 
     private String title;
     private Artist artists;
+    private String[] notes;
 
     public String getTitle() {
         return title;
@@ -39,6 +40,14 @@ public class Song {
 
     public void setArtists(Artist artists) {
         this.artists = artists;
+    }
+
+    public String[] getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String[] notes) {
+        this.notes = notes;
     }
 
 }

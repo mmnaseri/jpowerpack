@@ -202,6 +202,13 @@ public class CachedBeanComparator implements BeanComparator {
                 result.add(new SimpleValueModificationComparisonResult(property, firstValue, secondValue));
                 return result;
             }
+        } else if (firstValue.getClass().isArray()) {
+            final Object[] firstArray = (Object[]) firstValue;
+            final Object[] secondArray = (Object[]) secondValue;
+            if (compareArrays(comparisonStrategy, firstArray, secondArray)) {
+                result.add(new SimpleValueModificationComparisonResult(property, firstArray, secondValue));
+                return result;
+            }
         }
         //Reaching here means that we need to examine the details of each value to know if they are different
         final Set<ComparisonResult> comparisonResults = compare(firstValue, secondValue, comparisonStrategy);
@@ -232,6 +239,14 @@ public class CachedBeanComparator implements BeanComparator {
             }
         }
         return false;
+    }
+
+    private boolean compareArrays(ComparisonStrategy<Object> comparisonStrategy, Object[] firstArray, Object[] secondArray) {
+        final ArrayList<Object> firstList = new ArrayList<Object>();
+        final ArrayList<Object> secondList = new ArrayList<Object>();
+        Collections.addAll(firstList, firstArray);
+        Collections.addAll(secondList, secondArray);
+        return compareLists(comparisonStrategy, firstList, secondList);
     }
 
     private boolean compareLists(ComparisonStrategy<Object> comparisonStrategy, List firstList, List secondList) throws BeanComparisonException {

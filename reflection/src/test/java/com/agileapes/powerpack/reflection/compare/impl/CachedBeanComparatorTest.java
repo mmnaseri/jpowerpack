@@ -248,4 +248,29 @@ public class CachedBeanComparatorTest {
         Assert.assertTrue(((Set) ((SimpleValueModificationComparisonResult) difference).getSecond()).isEmpty());
     }
 
+    @Test
+    public void testComparisonOfSimilarArrays() throws Exception {
+        final Song first = new Song();
+        final Song second = new Song();
+        first.setNotes(new String[]{"1", "2", "3"});
+        second.setNotes(new String[]{"1", "2", "3"});
+        Assert.assertTrue(compare(first, second).isEmpty());
+    }
+
+    @Test
+    public void testComparisonOfNonSimilarArrays() throws Exception {
+        final Song first = new Song();
+        final Song second = new Song();
+        first.setNotes(new String[]{"2", "3"});
+        second.setNotes(new String[]{"1", "2", "3"});
+        final Set<ComparisonResult> comparisonResults = compare(first, second);
+        Assert.assertFalse(comparisonResults.isEmpty());
+        Assert.assertEquals(comparisonResults.size(), 1);
+        final ComparisonResult item = comparisonResults.iterator().next();
+        Assert.assertTrue(item instanceof SimpleValueModificationComparisonResult);
+        Assert.assertEquals(item.getProperty(), "notes");
+        Assert.assertEquals(((Object[]) ((SimpleValueModificationComparisonResult) item).getFirst()).length, 2);
+        Assert.assertEquals(((Object[]) ((SimpleValueModificationComparisonResult) item).getSecond()).length, 3);
+    }
+
 }
