@@ -113,4 +113,18 @@ public class CollectionUtilsTest {
             Assert.assertEquals(map.get(key), values[i]);
         }
     }
+
+    @Test
+    public void testUnion() throws Exception {
+        final Set<String> first = CollectionUtils.asSet("1", "2", "3");
+        final Set<String> second = CollectionUtils.asSet("3", "4", "5");
+        final Set<String> third = CollectionUtils.asSet("4", "5", "6");
+        @SuppressWarnings("unchecked") final Set<String> union = CollectionUtils.union(first, second, third);
+        Assert.assertNotNull(union);
+        Assert.assertEquals(union.size(), 6);
+        for (int i = 1; i <= 6; i ++) {
+            Assert.assertTrue(union.contains(Integer.toString(i)));
+        }
+    }
+
 }
