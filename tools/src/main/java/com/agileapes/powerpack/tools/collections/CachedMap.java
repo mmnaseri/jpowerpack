@@ -62,7 +62,7 @@ public class CachedMap<K, V> implements Map<K, V> {
 
     @Override
     public V get(Object key) {
-        if (!containsKey(key)) {
+        if (containsKey(key)) {
             @SuppressWarnings("unchecked") final K convertedKey = (K) key;
             final V value = missHandler.handle(convertedKey);
             if (value != null) {

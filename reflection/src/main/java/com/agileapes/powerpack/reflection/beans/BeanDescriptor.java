@@ -51,7 +51,7 @@ public interface BeanDescriptor<B> {
      * This will return the type of the wrapped bean itself.
      * @return the bean type
      */
-    Class<B> getBeanType();
+    Class<?> getBeanType();
 
     /**
      * This method will determine whether the given property (if available) is writable or not

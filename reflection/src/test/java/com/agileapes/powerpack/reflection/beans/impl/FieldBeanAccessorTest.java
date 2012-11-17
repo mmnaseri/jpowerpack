@@ -14,6 +14,7 @@
 
 package com.agileapes.powerpack.reflection.beans.impl;
 
+import com.agileapes.powerpack.reflection.beans.BeanAccessorFactory;
 import com.agileapes.powerpack.test.model.Book;
 import com.agileapes.powerpack.test.model.Printable;
 import com.agileapes.powerpack.tools.collections.CollectionUtils;
@@ -32,11 +33,13 @@ public class FieldBeanAccessorTest {
     public static final String TITLE = "Killer UX Design";
     public static final String AUTHOR = "Jodie Moule";
 
+    private final BeanAccessorFactory factory = new FieldBeanAccessorFactory();
+
     private FieldBeanAccessor<Book> getBeanAccessor() {
         final Book book = new Book();
         book.setTitle(TITLE);
         book.setAuthor(AUTHOR);
-        return new FieldBeanAccessor<Book>(book);
+        return (FieldBeanAccessor<Book>) factory.getBeanAccessor(book);
     }
 
     private Set<String> getProperties() {

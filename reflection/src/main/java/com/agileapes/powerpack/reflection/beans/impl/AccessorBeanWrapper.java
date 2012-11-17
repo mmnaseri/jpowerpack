@@ -77,7 +77,7 @@ public class AccessorBeanWrapper<B> implements BeanWrapper<B>, AccessMethodAware
     }
 
     @Override
-    public Class<B> getBeanType() {
+    public Class<?> getBeanType() {
         return accessor.getBeanType();
     }
 

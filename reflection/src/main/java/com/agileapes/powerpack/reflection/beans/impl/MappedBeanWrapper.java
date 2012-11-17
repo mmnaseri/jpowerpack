@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (7/31/12)
  */
-public class MappedBeanWrapper implements BeanWrapper<Map> {
+public class MappedBeanWrapper implements BeanWrapper<Object> {
 
     protected Map<String, Object> map = new ConcurrentHashMap<String, Object>();
 
@@ -93,7 +93,7 @@ public class MappedBeanWrapper implements BeanWrapper<Map> {
     }
 
     @Override
-    public Class<Map> getBeanType() {
+    public Class<?> getBeanType() {
         return Map.class;
     }
 

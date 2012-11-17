@@ -30,8 +30,11 @@ import java.util.*;
 
 /**
  * This class will take a {@link BeanAccessor} and then convert it to an instance of the
- * specified type. If you provide a {@link BeanWrapper} as the target type, then the engine
- * will have an easier time of converting things.
+ * specified type.
+ *
+ * This converter is typically used to convert items that have been converted from any
+ * arbitrary type to a child of {@link com.agileapes.powerpack.reflection.beans.ConfigurableBean}
+ * back into their own types.
  *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (8/1/12)

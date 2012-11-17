@@ -14,6 +14,7 @@
 
 package com.agileapes.powerpack.reflection.beans.impl;
 
+import com.agileapes.powerpack.reflection.beans.BeanAccessorFactory;
 import com.agileapes.powerpack.test.model.Book;
 import com.agileapes.powerpack.tools.collections.CollectionUtils;
 import org.testng.Assert;
@@ -29,12 +30,13 @@ public class GetterBeanAccessorTest {
 
     public static final String TITLE = "Killer UX Design";
     public static final String AUTHOR = "Jodie Moule";
+    private final BeanAccessorFactory factory = new GetterBeanAccessorFactory();
 
     private GetterBeanAccessor<Book> getBeanAccessor() {
         final Book book = new Book();
         book.setTitle(TITLE);
         book.setAuthor(AUTHOR);
-        return new GetterBeanAccessor<Book>(book);
+        return (GetterBeanAccessor<Book>) factory.getBeanAccessor(book);
     }
 
     @Test

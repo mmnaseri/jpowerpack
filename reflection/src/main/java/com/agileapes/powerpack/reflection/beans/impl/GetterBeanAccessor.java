@@ -117,9 +117,8 @@ public class GetterBeanAccessor<B> implements BeanAccessor<B>, AccessMethodAware
     }
 
     @Override
-    public Class<B> getBeanType() {
-        //noinspection unchecked
-        return (Class<B>) bean.getClass();
+    public Class<?> getBeanType() {
+        return bean.getClass();
     }
 
     @Override
