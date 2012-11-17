@@ -161,6 +161,14 @@ public abstract class CollectionUtils {
         return set;
     }
 
+    public static <E> Set<E> union(Set<? extends E> ... sets) {
+        final CopyOnWriteArraySet<E> result = new CopyOnWriteArraySet<E>();
+        for (Set<? extends E> set : sets) {
+            result.addAll(set);
+        }
+        return result;
+    }
+
     public static final class MapBuilder<K, V> {
 
         private final Map<K, V> map;

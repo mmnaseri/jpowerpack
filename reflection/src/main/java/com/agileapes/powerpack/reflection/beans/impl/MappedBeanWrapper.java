@@ -18,10 +18,14 @@ import com.agileapes.powerpack.reflection.beans.BeanAccessor;
 import com.agileapes.powerpack.reflection.beans.BeanWrapper;
 import com.agileapes.powerpack.reflection.exceptions.NoSuchPropertyException;
 import com.agileapes.powerpack.reflection.exceptions.PropertyAccessException;
+import com.agileapes.powerpack.tools.collections.CacheMissHandler;
+import com.agileapes.powerpack.tools.collections.CachedMap;
+import com.agileapes.powerpack.tools.collections.CollectionUtils;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * This bean wrapper will hold an internal map of the given object, which can be later
@@ -33,6 +37,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MappedBeanWrapper implements BeanWrapper<Object> {
 
     protected Map<String, Object> map = new ConcurrentHashMap<String, Object>();
+    private Set<String> nullProperties = new CopyOnWriteArraySet<String>();
+    private Map<String, Class<?>> types = new CachedMap<String, Class<?>>(new CacheMissHandler<String, Class<?>>() {
+        @Override
+        public Class<?> handle(String propertyName) {
+            return map.containsKey(propertyName) ? map.get(propertyName).getClass() : null;
+        }
+    });
 
     public MappedBeanWrapper() {
     }
@@ -40,12 +51,19 @@ public class MappedBeanWrapper implements BeanWrapper<Object> {
     public MappedBeanWrapper(Object bean) throws PropertyAccessException, NoSuchPropertyException {
         final BeanAccessor<Object> accessor = new GetterBeanAccessor<Object>(bean);
         for (String property : accessor.getProperties()) {
+            types.put(property, accessor.getPropertyType(property));
             setPropertyValue(property, accessor.getPropertyValue(property));
         }
     }
 
     @Override
     public void setPropertyValue(String propertyName, Object propertyValue) throws NoSuchPropertyException, PropertyAccessException {
+        if (propertyValue == null) {
+            nullProperties.add(propertyName);
+            return;
+        } else if (nullProperties.contains(propertyName)) {
+            nullProperties.remove(propertyName);
+        }
         try {
             map.put(propertyName, propertyValue);
         } catch (NullPointerException ignored) {
@@ -59,8 +77,11 @@ public class MappedBeanWrapper implements BeanWrapper<Object> {
 
     @Override
     public <T> T getPropertyValue(String propertyName) throws NoSuchPropertyException, PropertyAccessException {
-        if (!map.containsKey(propertyName)) {
+        if (!hasProperty(propertyName)) {
             throw new NoSuchPropertyException(propertyName);
+        }
+        if (nullProperties.contains(propertyName)) {
+            return null;
         }
         //noinspection unchecked
         return (T) map.get(propertyName);
@@ -68,8 +89,11 @@ public class MappedBeanWrapper implements BeanWrapper<Object> {
 
     @Override
     public <T> T getPropertyValue(String propertyName, Class<T> type) throws NoSuchPropertyException, PropertyAccessException {
-        if (!map.containsKey(propertyName)) {
+        if (!hasProperty(propertyName)) {
             throw new NoSuchPropertyException(propertyName);
+        }
+        if (nullProperties.contains(propertyName)) {
+            return null;
         }
         final Object value = map.get(propertyName);
         if (!type.isInstance(value)) {
@@ -80,16 +104,16 @@ public class MappedBeanWrapper implements BeanWrapper<Object> {
     }
 
     @Override
-    public boolean hasProperty(String propertyName) {
-        return map.containsKey(propertyName);
+    public Class<?> getPropertyType(String propertyName) throws NoSuchPropertyException {
+        if (!hasProperty(propertyName)) {
+            throw new NoSuchPropertyException(propertyName);
+        }
+        return types.get(propertyName);
     }
 
     @Override
-    public Class<?> getPropertyType(String propertyName) throws NoSuchPropertyException {
-        if (!map.containsKey(propertyName)) {
-            throw new NoSuchPropertyException(propertyName);
-        }
-        return map.get(propertyName).getClass();
+    public boolean hasProperty(String propertyName) {
+        return map.containsKey(propertyName) || nullProperties.contains(propertyName);
     }
 
     @Override
@@ -104,7 +128,8 @@ public class MappedBeanWrapper implements BeanWrapper<Object> {
 
     @Override
     public Set<String> getProperties() {
-        return map.keySet();
+        //noinspection unchecked
+        return CollectionUtils.union(map.keySet(), nullProperties);
     }
 
     @Override

@@ -23,10 +23,7 @@ import com.agileapes.powerpack.reflection.conversion.impl.wrapper.MapWrapper;
 import com.agileapes.powerpack.reflection.conversion.impl.wrapper.SetWrapper;
 import com.agileapes.powerpack.reflection.exceptions.ConversionFailureException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
@@ -202,6 +199,11 @@ public abstract class AbstractCachedBeanConverter implements BeanConverter {
                 ((MapWrapper<Object, Object>) target).put(key, value, key == null ? null : key.getClass(), value == null ? null : value.getClass());
             }
             result = target;
+        } else if (source.getClass().isArray()) {
+            result = new ArrayList<Object>();
+            //noinspection unchecked
+            Collections.addAll((List<Object>) result, (Object[]) source);
+            result = convertItem(result, targetType, conversionFilter);
         } else if (!conversionFilter.convert(targetType, source)) {
             result = source;
         } else {

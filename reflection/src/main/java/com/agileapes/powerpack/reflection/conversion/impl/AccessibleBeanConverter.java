@@ -26,6 +26,7 @@ import com.agileapes.powerpack.reflection.conversion.impl.wrapper.MapWrapper;
 import com.agileapes.powerpack.reflection.conversion.impl.wrapper.SetWrapper;
 import com.agileapes.powerpack.reflection.exceptions.ConversionFailureException;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -119,7 +120,10 @@ public class AccessibleBeanConverter {
             if (!target.hasProperty(propertyName) || !target.canWrite(propertyName)) {
                 continue;
             }
-            final Class<?> propertyType = source.getPropertyType(propertyName);
+            Class<?> propertyType = source.getPropertyType(propertyName);
+            if (propertyType == null) {
+                propertyType = target.getPropertyType(propertyName);
+            }
             if (!conversionFilter.include(target.getClass(), propertyType, propertyName)) {
                 continue;
             }
@@ -136,6 +140,20 @@ public class AccessibleBeanConverter {
         }
     }
 
+    private <E> E[] arrayOf(Object[] array, Class<E> targetType) {
+        @SuppressWarnings("unchecked") final E[] result = (E[]) Array.newInstance(targetType, array.length);
+        for (int i = 0; i < array.length; i++) {
+            Object item = array[i];
+            if (array[i] == null) {
+                result[i] = null;
+                continue;
+            }
+            //noinspection unchecked
+            result[i] = (E) item;
+        }
+        return result;
+    }
+
     private Object convertItem(Object propertyValue, Class<?> targetType, ConversionFilter conversionFilter) throws Exception {
         Object result;
         if (propertyValue == null) {
@@ -150,6 +168,15 @@ public class AccessibleBeanConverter {
                 list.add(convertItem(item, type, conversionFilter));
             }
             result = list;
+        } else if (propertyValue instanceof ListWrapper && targetType.isArray()) {
+            final ListWrapper listWrapper = (ListWrapper) propertyValue;
+            final List<Object> list = new ArrayList<Object>();
+            for (int i = 0; i < listWrapper.size(); i++) {
+                Object item = listWrapper.get(i);
+                final Class type = listWrapper.getType(i);
+                list.add(convertItem(item, type, conversionFilter));
+            }
+            result = arrayOf(list.toArray(), targetType.getComponentType());
         } else if (propertyValue instanceof MapWrapper && Map.class.isAssignableFrom(targetType)) {
             final MapWrapper mapWrapper = (MapWrapper) propertyValue;
             final Map<Object, Object> map = new HashMap<Object, Object>();
