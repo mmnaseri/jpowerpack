@@ -164,14 +164,14 @@ public abstract class CollectionUtils {
     /**
      * This method, as the name suggests, will take the union of all the input sets,
      * creating an output, thread-safe set.
-     * @param sets    input sets
+     * @param collections    input sets
      * @param <E>     type of set items
      * @return a set that is the union of all input sets
      */
-    public static <E> Set<E> union(Set<E> ... sets) {
+    public static <E> Set<E> union(Collection<E> ... collections) {
         final CopyOnWriteArraySet<E> result = new CopyOnWriteArraySet<E>();
-        for (Set<E> set : sets) {
-            result.addAll(set);
+        for (Collection<E> collection : collections) {
+            result.addAll(collection);
         }
         return result;
     }

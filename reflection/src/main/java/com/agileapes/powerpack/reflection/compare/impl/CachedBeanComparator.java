@@ -22,6 +22,7 @@ import com.agileapes.powerpack.reflection.compare.ComparisonStrategy;
 import com.agileapes.powerpack.reflection.compare.result.*;
 import com.agileapes.powerpack.reflection.exceptions.BeanComparisonException;
 import com.agileapes.powerpack.reflection.exceptions.CausalityViolationException;
+import com.agileapes.powerpack.tools.collections.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -89,6 +90,9 @@ public class CachedBeanComparator implements BeanComparator {
         if (cache.containsKey(comparisonItem)) {
             final Set<ComparisonResult> results = cache.get(comparisonItem);
             if (results == null) {
+                //this means that the comparison has been set to motion but has not been concluded,
+                //thus making this comparison depend on itself, and as such, violating the law of
+                //causality
                 throw new CausalityViolationException();
             }
             return results;
@@ -97,9 +101,7 @@ public class CachedBeanComparator implements BeanComparator {
         @SuppressWarnings("unchecked") final BeanAccessor<?> firstAccessor = accessorFactory.getBeanAccessor(first);
         @SuppressWarnings("unchecked") final BeanAccessor<?> secondAccessor = accessorFactory.getBeanAccessor(second);
         //We first pool together all available properties
-        final Set<String> properties = new HashSet<String>();
-        properties.addAll(firstAccessor.getProperties());
-        properties.addAll(secondAccessor.getProperties());
+        @SuppressWarnings("unchecked") final Set<String> properties = CollectionUtils.union(firstAccessor.getProperties(), secondAccessor.getProperties());
         //Then we determine which properties are not in common
         for (String property : properties) {
             if (secondAccessor.hasProperty(property) && firstAccessor.hasProperty(property)) {

@@ -16,22 +16,14 @@ package com.agileapes.powerpack.reflection.compare.impl;
 
 import com.agileapes.powerpack.reflection.beans.BeanAccessorFactory;
 import com.agileapes.powerpack.reflection.beans.impl.FieldBeanAccessorFactory;
-import com.agileapes.powerpack.reflection.beans.impl.GetterBeanAccessorFactory;
-import com.agileapes.powerpack.reflection.compare.result.ComparisonResult;
-import com.agileapes.powerpack.reflection.compare.result.ComplexValueModificationComparisonResult;
-import com.agileapes.powerpack.reflection.compare.result.SimpleValueModificationComparisonResult;
-import com.agileapes.powerpack.test.model.Artist;
-import com.agileapes.powerpack.test.model.Book;
-import com.agileapes.powerpack.test.model.HidingRabbit;
-import com.agileapes.powerpack.test.model.Song;
+import com.agileapes.powerpack.reflection.compare.result.*;
+import com.agileapes.powerpack.reflection.exceptions.CausalityViolationException;
+import com.agileapes.powerpack.test.model.*;
 import com.agileapes.powerpack.tools.collections.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
@@ -45,7 +37,8 @@ public class CachedBeanComparatorTest {
     }
 
     private Set<ComparisonResult> compare(Object first, Object second) {
-        return compare(first, second, new GetterBeanAccessorFactory());
+        final CachedBeanComparator comparator = new CachedBeanComparator();
+        return comparator.compare(first, second);
     }
 
     @Test
@@ -273,4 +266,134 @@ public class CachedBeanComparatorTest {
         Assert.assertEquals(((Object[]) ((SimpleValueModificationComparisonResult) item).getSecond()).length, 3);
     }
 
+    @Test(expectedExceptions = CausalityViolationException.class)
+    public void testViolationOfCausality() throws Exception {
+        final Artist first = new Artist();
+        final Artist second = new Artist();
+        first.setAffiliations(CollectionUtils.asSet(second));
+        second.setAffiliations(CollectionUtils.asSet(first));
+        compare(first, second);
+    }
+
+    @Test
+    public void testCaching() throws Exception {
+        final Artist first = new Artist();
+        final Artist second = new Artist();
+        final Artist third = new Artist();
+        final Artist fourth = new Artist();
+        first.setAffiliations(Arrays.asList(third, fourth));
+        second.setAffiliations(Arrays.asList(fourth, third));
+        Assert.assertTrue(compare(first, second).isEmpty());
+    }
+
+    @Test
+    public void testAdditionOfProperties() throws Exception {
+        final Printable first = new Printable();
+        final Book second = new Book();
+        final Set<ComparisonResult> comparisonResults = compare(first, second, new FieldBeanAccessorFactory());
+        Assert.assertFalse(comparisonResults.isEmpty());
+        Assert.assertEquals(comparisonResults.size(), 2);
+        final Set<String> properties = CollectionUtils.asSet("title", "author");
+        for (ComparisonResult result : comparisonResults) {
+            Assert.assertTrue(result instanceof PropertyAdditionComparisonResult);
+            Assert.assertTrue(properties.contains(result.getProperty()));
+        }
+    }
+
+    @Test
+    public void testRemovalOfProperties() throws Exception {
+        final Book first = new Book();
+        final Printable second = new Printable();
+        final Set<ComparisonResult> comparisonResults = compare(first, second, new FieldBeanAccessorFactory());
+        Assert.assertFalse(comparisonResults.isEmpty());
+        Assert.assertEquals(comparisonResults.size(), 2);
+        final Set<String> properties = CollectionUtils.asSet("title", "author");
+        for (ComparisonResult result : comparisonResults) {
+            Assert.assertTrue(result instanceof PropertyRemovalComparisonResult);
+            Assert.assertTrue(properties.contains(result.getProperty()));
+        }
+    }
+
+    @Test
+    public void testReadError() throws Exception {
+        final RefusingBean first = new RefusingBean();
+        final RefusingBean second = new RefusingBean();
+        final Set<ComparisonResult> result = compare(first, second);
+        Assert.assertFalse(result.isEmpty());
+        Assert.assertEquals(result.size(), 1);
+        final ComparisonResult difference = result.iterator().next();
+        Assert.assertTrue(difference instanceof FailedComparisonResult);
+        Assert.assertEquals(difference.getProperty(), "name");
+        Assert.assertTrue(((FailedComparisonResult) difference).getCause() instanceof Error);
+    }
+
+    @Test
+    public void testCompareNoneAndElse() throws Exception {
+        final Artist first = new Artist();
+        final Artist second = new Artist();
+        //noinspection unchecked
+        first.setAffiliations(CollectionUtils.asSet((Artist) null));
+        second.setAffiliations(CollectionUtils.asSet(first));
+        Assert.assertFalse(compare(first, second).isEmpty());
+    }
+
+    @Test
+    public void testTypeDifference() throws Exception {
+        final IdentifiedSong first = new IdentifiedSong();
+        final IdentifiedSong second = new IdentifiedSong();
+        first.setIdentifier(1);
+        second.setIdentifier(1L);
+        final Set<ComparisonResult> comparisonResults = compare(first, second);
+        Assert.assertFalse(comparisonResults.isEmpty());
+        Assert.assertEquals(comparisonResults.size(), 2);
+        for (ComparisonResult item : comparisonResults) {
+            if (item instanceof TypeModificationComparisonResult) {
+                TypeModificationComparisonResult result = (TypeModificationComparisonResult) item;
+                Assert.assertEquals(result.getProperty(), "identifier");
+                Assert.assertEquals(result.getOriginalType(), Integer.class);
+                Assert.assertEquals(result.getNewType(), Long.class);
+            } else if (item instanceof SimpleValueModificationComparisonResult) {
+                SimpleValueModificationComparisonResult result = (SimpleValueModificationComparisonResult) item;
+                Assert.assertEquals(result.getProperty(), "identifier");
+                Assert.assertEquals(result.getFirst(), 1);
+                Assert.assertEquals(result.getSecond(), 1L);
+            } else {
+                Assert.fail();
+            }
+        }
+    }
+
+    @Test
+    public void testDifferenceInPrimitives() throws Exception {
+        final IdentifiedSong first = new IdentifiedSong();
+        final IdentifiedSong second = new IdentifiedSong();
+        first.setSerial(1);
+        second.setSerial(2);
+        final Set<ComparisonResult> comparisonResults = compare(first, second);
+        Assert.assertFalse(comparisonResults.isEmpty());
+        Assert.assertEquals(comparisonResults.size(), 1);
+        final ComparisonResult result = comparisonResults.iterator().next();
+        Assert.assertTrue(result instanceof SimpleValueModificationComparisonResult);
+        Assert.assertEquals(result.getProperty(), "serial");
+        Assert.assertEquals(((SimpleValueModificationComparisonResult) result).getFirst(), 1);
+        Assert.assertEquals(((SimpleValueModificationComparisonResult) result).getSecond(), 2);
+    }
+
+    @Test
+    public void testComparisonOfMapKeys() throws Exception {
+        final KeyValueHolder first = new KeyValueHolder();
+        first.setItems(CollectionUtils.mapOf(String.class, String.class).keys("1").values("a"));
+        final KeyValueHolder second = new KeyValueHolder();
+        second.setItems(CollectionUtils.mapOf(String.class, String.class).keys("2").values("a"));
+        Assert.assertFalse(compare(first, second).isEmpty());
+    }
+
+    @Test
+    public void testComparisonOfMapValues() throws Exception {
+        final KeyValueHolder first = new KeyValueHolder();
+        first.setItems(CollectionUtils.mapOf(String.class, String.class).keys("1").values("a"));
+        final KeyValueHolder second = new KeyValueHolder();
+        second.setItems(CollectionUtils.mapOf(String.class, String.class).keys("1").values("b"));
+        Assert.assertFalse(compare(first, second).isEmpty());
+    }
 }
