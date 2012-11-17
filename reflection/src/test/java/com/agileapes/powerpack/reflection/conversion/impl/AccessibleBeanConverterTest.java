@@ -29,14 +29,20 @@ public class AccessibleBeanConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        final AccessibleBeanConverter converter = new AccessibleBeanConverter();
+        //this is the actual book instance
         final Book book = new Book();
         book.setTitle("My Book");
         book.setAuthor("The Author");
+        //now we convert this using a TypedBeanConverter
         final SerializableBeanWrapper serializableBook = new SerializableBeanConverter().convert(book);
+        final AccessibleBeanConverter converter = new AccessibleBeanConverter();
+        //using the AccessibleBeanConverter we now convert this back to its original type
         final Book convertedBook = converter.convert(serializableBook, Book.class);
-        BeanComparator comparator = new CachedBeanComparator();
-        Assert.assertTrue(comparator.compare(book, convertedBook).isEmpty());
+        //using a comparator we discern that the too are similar
+        Assert.assertTrue(new CachedBeanComparator().compare(book, convertedBook).isEmpty());
+        //to further assure ourselves
+        Assert.assertEquals(convertedBook.getAuthor(), book.getAuthor());
+        Assert.assertEquals(convertedBook.getTitle(), book.getTitle());
     }
 
 }
