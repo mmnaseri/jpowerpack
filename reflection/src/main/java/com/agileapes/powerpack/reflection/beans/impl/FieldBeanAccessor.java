@@ -24,7 +24,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -69,7 +68,7 @@ public class FieldBeanAccessor<B> extends GetterBeanAccessor<B> {
         try {
             //noinspection unchecked
             return (T) field.get(getBean());
-        } catch (IllegalAccessException e) {
+        } catch (Throwable e) {
             throw new PropertyReadAccessException(propertyName, e);
         }
     }

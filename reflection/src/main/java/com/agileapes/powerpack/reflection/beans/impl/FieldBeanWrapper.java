@@ -49,7 +49,7 @@ public class FieldBeanWrapper<B> extends AccessorBeanWrapper<B> {
                 field.setAccessible(true);
                 try {
                     field.set(getBean(), propertyValue);
-                } catch (IllegalAccessException e) {
+                } catch (Throwable e) {
                     exception = e;
                     continue;
                 }

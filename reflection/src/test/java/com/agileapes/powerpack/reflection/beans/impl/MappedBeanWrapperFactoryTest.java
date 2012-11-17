@@ -12,26 +12,24 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.powerpack.test.model;
+package com.agileapes.powerpack.reflection.beans.impl;
+
+import com.agileapes.powerpack.reflection.beans.BeanWrapper;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/11/16, 21:05)
+ * @since 1.0 (2012/11/17, 16:57)
  */
-public class HidingRabbit {
+public class MappedBeanWrapperFactoryTest {
 
-    public static final String ILLEGAL_LOCATION = "hilltop";
-    private String location = "unknown";
-
-    public String getLocation() {
-        return "not telling";
-    }
-
-    public void setLocation(String location) {
-        if (location.equals(ILLEGAL_LOCATION)) {
-            throw new Error("Illegal location!");
-        }
-        this.location = location;
+    @Test
+    public void testGetWrapper() throws Exception {
+        final MappedBeanWrapperFactory factory = new MappedBeanWrapperFactory();
+        final BeanWrapper<Object> first = factory.getWrapper(new Object());
+        final BeanWrapper<Object> second = factory.getWrapper(new Object());
+        Assert.assertFalse(first == second);
     }
 
 }

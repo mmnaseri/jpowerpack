@@ -82,4 +82,16 @@ public class ClassBeanDescriptorTest {
         Assert.assertEquals(accessMethod.getPropertyName(), "title");
         Assert.assertEquals(accessMethod.getAccessorName(), "getTitle");
     }
+
+    @Test(expectedExceptions = NoSuchPropertyException.class)
+    public void testCanWriteForNonExistentProperty() throws Exception {
+        final ClassBeanDescriptor<Book> descriptor = getDescriptor();
+        descriptor.canWrite("myProperty");
+    }
+
+    @Test(expectedExceptions = NoSuchPropertyException.class)
+    public void testAccessMethodForNonExistentProperty() throws Exception {
+        final ClassBeanDescriptor<Book> descriptor = getDescriptor();
+        descriptor.getAccessMethod("myProperty");
+    }
 }

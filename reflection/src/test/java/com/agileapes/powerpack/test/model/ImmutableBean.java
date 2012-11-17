@@ -16,22 +16,18 @@ package com.agileapes.powerpack.test.model;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/11/16, 21:05)
+ * @since 1.0 (2012/11/17, 16:30)
  */
-public class HidingRabbit {
+public class ImmutableBean {
 
-    public static final String ILLEGAL_LOCATION = "hilltop";
-    private String location = "unknown";
+    private final String name;
 
-    public String getLocation() {
-        return "not telling";
+    public ImmutableBean(String name) {
+        this.name = name;
     }
 
-    public void setLocation(String location) {
-        if (location.equals(ILLEGAL_LOCATION)) {
-            throw new Error("Illegal location!");
-        }
-        this.location = location;
+    public String getName() {
+        return name;
     }
 
 }

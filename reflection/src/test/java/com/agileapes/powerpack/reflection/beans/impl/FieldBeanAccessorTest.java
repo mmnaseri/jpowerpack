@@ -70,4 +70,22 @@ public class FieldBeanAccessorTest {
             Assert.assertTrue(getBeanAccessor().canWrite(propertyName));
         }
     }
+
+    @Test
+    public void testPropertyType() throws Exception {
+        final FieldBeanAccessor<Book> accessor = getBeanAccessor();
+        Assert.assertTrue(accessor.hasProperty("author"));
+        Assert.assertEquals(accessor.getPropertyType("author"), String.class);
+    }
+
+    @Test
+    public void testPropertyAccessType() throws Exception {
+        final FieldBeanAccessor<Book> accessor = getBeanAccessor();
+        Assert.assertTrue(accessor.hasProperty("author"));
+        final PropertyAccessMethod accessMethod = accessor.getAccessMethod("author");
+        Assert.assertNotNull(accessMethod);
+        Assert.assertEquals(accessMethod.getPropertyName(), "author");
+        Assert.assertEquals(accessMethod.getAccessorName(), "author");
+        Assert.assertEquals(accessMethod.getAccessType(), AccessType.FIELD);
+    }
 }

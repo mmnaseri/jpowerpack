@@ -64,14 +64,15 @@ public class MappedBeanWrapper implements BeanWrapper<Object> {
         } else if (nullProperties.contains(propertyName)) {
             nullProperties.remove(propertyName);
         }
-        try {
-            map.put(propertyName, propertyValue);
-        } catch (NullPointerException ignored) {
-        }
+        map.put(propertyName, propertyValue);
+        types.put(propertyName, propertyValue.getClass());
     }
 
     @Override
     public boolean canWrite(String propertyName) throws NoSuchPropertyException {
+        if (!hasProperty(propertyName)) {
+            throw new NoSuchPropertyException(propertyName);
+        }
         return true;
     }
 

@@ -14,6 +14,7 @@
 
 package com.agileapes.powerpack.reflection.beans.impl;
 
+import com.agileapes.powerpack.reflection.exceptions.PropertyWriteAccessException;
 import com.agileapes.powerpack.test.model.Book;
 import com.agileapes.powerpack.test.model.Printable;
 import org.testng.Assert;
@@ -34,4 +35,9 @@ public class FieldBeanWrapperTest {
         Assert.assertNull(wrapper.getPropertyValue("identifier"));
     }
 
+    @Test(expectedExceptions = PropertyWriteAccessException.class)
+    public void testWritingToFinalProperty() throws Exception {
+        final FieldBeanWrapper<Book> wrapper = new FieldBeanWrapper<Book>(new Book());
+        wrapper.setPropertyValue("DEFAULT_ID", null);
+    }
 }

@@ -15,7 +15,10 @@
 package com.agileapes.powerpack.reflection.beans.impl;
 
 import com.agileapes.powerpack.reflection.beans.BeanAccessorFactory;
+import com.agileapes.powerpack.reflection.exceptions.NoSuchPropertyException;
+import com.agileapes.powerpack.reflection.exceptions.PropertyReadAccessException;
 import com.agileapes.powerpack.test.model.Book;
+import com.agileapes.powerpack.test.model.RefusingBean;
 import com.agileapes.powerpack.tools.collections.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -93,5 +96,35 @@ public class GetterBeanAccessorTest {
         Assert.assertEquals(accessMethod.getAccessType(), AccessType.METHOD);
         Assert.assertEquals(accessMethod.getPropertyName(), "title");
         Assert.assertEquals(accessMethod.getAccessorName(), "getTitle");
+    }
+
+    @Test(expectedExceptions = NoSuchPropertyException.class)
+    public void testCanWriteForNonExistentProperty() throws Exception {
+        final GetterBeanAccessor<Book> accessor = getBeanAccessor();
+        accessor.canWrite("myProperty ");
+    }
+
+    @Test(expectedExceptions = PropertyReadAccessException.class)
+    public void testReadError() throws Exception {
+        final GetterBeanAccessor<RefusingBean> accessor = new GetterBeanAccessor<RefusingBean>(new RefusingBean());
+        accessor.getPropertyValue("name");
+    }
+
+    @Test(expectedExceptions = NoSuchPropertyException.class)
+    public void testGetPropertyValueForNonExistentProperty() throws Exception {
+        final GetterBeanAccessor<Book> accessor = getBeanAccessor();
+        accessor.getPropertyValue("property");
+    }
+
+    @Test(expectedExceptions = NoSuchPropertyException.class)
+    public void testGetTypedPropertyValueForNonExistentProperty() throws Exception {
+        final GetterBeanAccessor<Book> accessor = getBeanAccessor();
+        accessor.getPropertyValue("property", Class.class);
+    }
+
+    @Test(expectedExceptions = NoSuchPropertyException.class)
+    public void testGetPropertyValueWithInvalidType() throws Exception {
+        final GetterBeanAccessor<Book> accessor = getBeanAccessor();
+        accessor.getPropertyValue("title", Class.class);
     }
 }

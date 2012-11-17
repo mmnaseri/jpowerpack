@@ -16,22 +16,17 @@ package com.agileapes.powerpack.test.model;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/11/16, 21:05)
+ * @since 1.0 (2012/11/17, 17:14)
  */
-public class HidingRabbit {
+public class RefusingBean {
 
-    public static final String ILLEGAL_LOCATION = "hilltop";
-    private String location = "unknown";
+    private String name;
 
-    public String getLocation() {
-        return "not telling";
+    public String getName() {
+        throw new Error("I refuse to tell you my name!");
     }
 
-    public void setLocation(String location) {
-        if (location.equals(ILLEGAL_LOCATION)) {
-            throw new Error("Illegal location!");
-        }
-        this.location = location;
+    public void setName(String name) {
+        this.name = name;
     }
-
 }
