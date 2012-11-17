@@ -161,11 +161,10 @@ public abstract class CollectionUtils {
         return set;
     }
 
-    public static <E> Set<E> union(Set<? extends E> ... sets) {
+    public static <E> Set<E> union(Set<E> first, Set<E> second) {
         final CopyOnWriteArraySet<E> result = new CopyOnWriteArraySet<E>();
-        for (Set<? extends E> set : sets) {
-            result.addAll(set);
-        }
+        result.addAll(first);
+        result.addAll(second);
         return result;
     }
 
