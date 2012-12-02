@@ -324,6 +324,7 @@ public class CachedBeanComparatorTest {
         final ComparisonResult difference = result.iterator().next();
         Assert.assertTrue(difference instanceof FailedComparisonResult);
         Assert.assertEquals(difference.getProperty(), "name");
+        //noinspection ThrowableResultOfMethodCallIgnored
         Assert.assertTrue(((FailedComparisonResult) difference).getCause() instanceof Error);
     }
 
