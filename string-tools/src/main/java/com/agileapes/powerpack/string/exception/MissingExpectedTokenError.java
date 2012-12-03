@@ -20,25 +20,25 @@ import java.util.regex.Pattern;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/12/3, 17:54)
  */
-public class MissingExpectedTokenException extends DocumentReaderError {
+public class MissingExpectedTokenError extends DocumentReaderError {
 
     private static final long serialVersionUID = -5189141979630615395L;
     private final String expectedPattern;
 
-    public MissingExpectedTokenException(Pattern expectedPattern) {
+    public MissingExpectedTokenError(Pattern expectedPattern) {
         this("Expected token matching (" + expectedPattern + ") could not be found", expectedPattern);
     }
 
-    public MissingExpectedTokenException(String message, Pattern expectedPattern) {
+    public MissingExpectedTokenError(String message, Pattern expectedPattern) {
         super(message);
         this.expectedPattern = expectedPattern.toString();
     }
 
-    public MissingExpectedTokenException(String expectedPattern) {
+    public MissingExpectedTokenError(String expectedPattern) {
         this("Expected token matching (" + expectedPattern + ") could not be found", expectedPattern);
     }
 
-    public MissingExpectedTokenException(String message, String expectedPattern) {
+    public MissingExpectedTokenError(String message, String expectedPattern) {
         super(message);
         this.expectedPattern = expectedPattern;
     }

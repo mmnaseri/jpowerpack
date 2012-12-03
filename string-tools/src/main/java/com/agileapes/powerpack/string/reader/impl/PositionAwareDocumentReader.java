@@ -15,10 +15,7 @@
 package com.agileapes.powerpack.string.reader.impl;
 
 import com.agileapes.powerpack.string.exception.*;
-import com.agileapes.powerpack.string.reader.DocumentReader;
-import com.agileapes.powerpack.string.reader.ReaderSnapshot;
-import com.agileapes.powerpack.string.reader.SnippetParser;
-import com.agileapes.powerpack.string.reader.TokenDesignator;
+import com.agileapes.powerpack.string.reader.*;
 import com.agileapes.powerpack.string.text.PositionAwareTextHandler;
 import com.agileapes.powerpack.string.text.impl.SimplePositionHandler;
 
@@ -72,9 +69,17 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     }
 
     @Override
-    public boolean hasNext() {
+    public boolean hasTokens() {
+        return hasTokens(tokenDesignator);
+    }
+
+    @Override
+    public boolean hasTokens(TokenDesignator tokenDesignator) {
+        if (tokenDesignator == null) {
+            throw new DocumentReaderError("The document reader does not know how to read tokens");
+        }
         for (int i = cursor; i < document.length() - 1; i ++) {
-            if (tokenDesignator.isToken(document.substring(cursor, i + 1))) {
+            if (tokenDesignator.getToken(document.substring(cursor, i + 1)) != null) {
                 return true;
             }
         }
@@ -94,45 +99,46 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     @Override
     public char nextChar() {
         if (!hasMore()) {
-            throw new NoMoreTextException();
+            throw new NoMoreTextError();
         }
-        positionHandler.readChar();
         final char result = rest().charAt(0);
+        positionHandler.readChar();
+        if (result == '\n') {
+            positionHandler.readLine();
+        }
         cursor ++;
         return result;
     }
 
     @Override
     public String nextToken() {
+        return nextToken(tokenDesignator);
+    }
+
+    @Override
+    public String nextToken(TokenDesignator tokenDesignator) {
         if (!hasMore()) {
-            throw new NoMoreTokensException();
+            throw new NoMoreTokensError();
         }
         if (tokenDesignator == null) {
             throw new DocumentReaderError("The document reader does not know how to read tokens");
         }
-        String result = null;
-        String substring = "";
-        for (int i = cursor; i < document.length(); i ++) {
-            substring += document.charAt(i);
-            if (tokenDesignator.isToken(substring)) {
-                result = substring;
-            } else if (result != null) {
-                break;
-            }
-        }
-        if (result == null) {
-            throw new NoMoreTokensException();
+        final String rest = rest();
+        final TokenDescriptor token = tokenDesignator.getToken(rest);
+        if (token == null) {
+            throw new NoMoreTokensError();
         } else {
+            final String result = rest.substring(0, token.getOffset() + token.getLength());
             cursor += result.length();
             positionHandler.readString(result);
-            return result;
+            return rest.substring(token.getOffset(), token.getOffset() + token.getLength());
         }
     }
 
     @Override
     public String read(Pattern pattern, boolean skipWhitespaces) {
         if (!hasMore()) {
-            throw new NoMoreTextException();
+            throw new NoMoreTextError();
         }
         if (skipWhitespaces) {
             skip(WHITESPACE);
@@ -150,11 +156,11 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     @Override
     public String expect(Pattern pattern, boolean skipWhitespaces) {
         if (!hasMore()) {
-            throw new NoMoreTextException();
+            throw new NoMoreTextError();
         }
         final String result = read(pattern, skipWhitespaces);
         if (result == null) {
-            throw new MissingExpectedTokenException(pattern);
+            throw new MissingExpectedTokenError(pattern);
         }
         return result;
     }
@@ -185,7 +191,7 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
         document = snapshot.getDocument();
         cursor = snapshot.getCursor();
         if (cursor > document.length()) {
-            throw new ReaderOverreachException();
+            throw new ReaderOverreachError();
         }
         positionHandler.reset();
         positionHandler.readString(taken());
@@ -195,7 +201,7 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     public void take(int offset) {
         cursor += offset;
         if (cursor > document.length()) {
-            throw new ReaderOverreachException();
+            throw new ReaderOverreachError();
         }
     }
 
@@ -203,7 +209,7 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     public String peek(int length) {
         final String rest = rest();
         if (length > rest.length()) {
-            throw new ReaderOverreachException();
+            throw new ReaderOverreachError();
         }
         return rest.substring(0, length);
     }

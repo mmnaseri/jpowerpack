@@ -12,16 +12,20 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.powerpack.string.reader;
+package com.agileapes.powerpack.string.exception;
 
 /**
- * This interface will help reader classes to identify a token within a string.
- *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/12/3, 17:01)
+ * @since 1.0 (2012/12/3, 17:49)
  */
-public interface TokenDesignator {
+public class NoMoreTokensError extends NoMoreTextError {
 
-    TokenDescriptor getToken(String string);
+    private static final long serialVersionUID = -6423879082695533730L;
 
+    public NoMoreTokensError() {
+    }
+
+    public NoMoreTokensError(String message) {
+        super(message);
+    }
 }

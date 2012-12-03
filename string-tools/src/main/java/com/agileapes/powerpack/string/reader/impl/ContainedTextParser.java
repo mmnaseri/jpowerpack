@@ -14,9 +14,10 @@
 
 package com.agileapes.powerpack.string.reader.impl;
 
-import com.agileapes.powerpack.string.exception.MissingExpectedTokenException;
+import com.agileapes.powerpack.string.exception.MissingExpectedTokenError;
 import com.agileapes.powerpack.string.reader.DocumentReader;
 import com.agileapes.powerpack.string.reader.SnippetParser;
+import com.agileapes.powerpack.string.reader.TokenDesignator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,19 +58,26 @@ public class ContainedTextParser implements SnippetParser {
     private final Character escape;
     private boolean acceptUnenclosed;
     private boolean acceptNested;
+    private TokenDesignator tokenDesignator;
 
     public ContainedTextParser(String opening, String closing) {
-        this(opening, closing, null);
+        this(opening, closing, (TokenDesignator) null);
+    }
+
+    public ContainedTextParser(String opening, String closing, TokenDesignator tokenDesignator) {
+        this(opening, closing, (Character) null);
+        this.tokenDesignator = tokenDesignator;
     }
 
     public ContainedTextParser(String opening, String closing, Character escape) {
-        this(opening, closing, escape, true, true);
+        this(opening, closing, escape, true, true, null);
     }
 
-    public ContainedTextParser(String opening, String closing, Character escape, boolean acceptUnenclosed, boolean acceptNested) {
+    public ContainedTextParser(String opening, String closing, Character escape, boolean acceptUnenclosed, boolean acceptNested, TokenDesignator tokenDesignator) {
         this.escape = escape;
         this.acceptUnenclosed = acceptUnenclosed;
         this.acceptNested = acceptNested;
+        this.tokenDesignator = tokenDesignator;
         opening = opening.trim();
         closing = closing.trim();
         if (opening.length() != closing.length() || opening.length() == 0) {
@@ -99,7 +107,11 @@ public class ContainedTextParser implements SnippetParser {
             //If the parser is to accept a string without enclosures, we proceed to read
             //the next token.
             if (acceptUnenclosed) {
-                return reader.nextToken();
+                if (tokenDesignator == null) {
+                    return reader.nextToken();
+                } else {
+                    return reader.nextToken(tokenDesignator);
+                }
             } else {
                 //This section constructs a pattern matching the expected opening for the
                 //contained text. This is to provide a (somewhat) more informative error
@@ -111,7 +123,7 @@ public class ContainedTextParser implements SnippetParser {
                     pattern += character;
                 }
                 pattern += "]";
-                throw new MissingExpectedTokenException(pattern);
+                throw new MissingExpectedTokenError(pattern);
             }
         }
         String result = "";
@@ -120,7 +132,7 @@ public class ContainedTextParser implements SnippetParser {
         int open = 1;
         while (true) {
             if (!reader.hasMore()) {
-                throw new MissingExpectedTokenException(String.valueOf(test.getClosing()));
+                throw new MissingExpectedTokenError(String.valueOf(test.getClosing()));
             }
             final char next = reader.nextChar();
             //If an opening was found within this contained instance, then

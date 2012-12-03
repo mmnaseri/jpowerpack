@@ -18,14 +18,14 @@ package com.agileapes.powerpack.string.exception;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/12/3, 17:47)
  */
-public class NoMoreTextException extends DocumentReaderError {
+public class NoMoreTextError extends DocumentReaderError {
 
     private static final long serialVersionUID = -1822455471711418794L;
 
-    public NoMoreTextException() {
+    public NoMoreTextError() {
     }
 
-    public NoMoreTextException(String message) {
+    public NoMoreTextError(String message) {
         super(message);
     }
 }

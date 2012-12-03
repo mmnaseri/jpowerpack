@@ -12,20 +12,36 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.powerpack.string.exception;
+package com.agileapes.powerpack.string.reader.impl;
+
+import com.agileapes.powerpack.string.reader.TokenDescriptor;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/12/3, 17:49)
+ * @since 1.0 (2012/12/4, 0:49)
  */
-public class NoMoreTokensException extends NoMoreTextException {
+public class SimpleTokenDescriptor implements TokenDescriptor {
 
-    private static final long serialVersionUID = -6423879082695533730L;
+    private final int offset;
+    private final int length;
 
-    public NoMoreTokensException() {
+    public SimpleTokenDescriptor(int length) {
+        this(length, 0);
     }
 
-    public NoMoreTokensException(String message) {
-        super(message);
+    public SimpleTokenDescriptor(int length, int offset) {
+        this.offset = offset;
+        this.length = length;
     }
+
+    @Override
+    public int getOffset() {
+        return offset;
+    }
+
+    @Override
+    public int getLength() {
+        return length;
+    }
+
 }

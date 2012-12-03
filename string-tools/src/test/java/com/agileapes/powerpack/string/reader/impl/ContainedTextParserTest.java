@@ -15,10 +15,12 @@
 package com.agileapes.powerpack.string.reader.impl;
 
 import com.agileapes.powerpack.string.exception.DocumentReaderError;
-import com.agileapes.powerpack.string.exception.MissingExpectedTokenException;
+import com.agileapes.powerpack.string.exception.MissingExpectedTokenError;
 import com.agileapes.powerpack.string.reader.DocumentReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.regex.Pattern;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
@@ -42,42 +44,42 @@ public class ContainedTextParserTest {
     @Test
     public void testEnclosedWithoutNestingWithoutEscaping() throws Exception {
         final DocumentReader reader = new PositionAwareDocumentReader("(a b\\) c) d");
-        final String parsed = reader.parse(new ContainedTextParser("(", ")", null, false, false));
+        final String parsed = reader.parse(new ContainedTextParser("(", ")", null, false, false, null));
         Assert.assertEquals(parsed, "a b\\");
     }
 
     @Test
     public void testEnclosedWithoutNestingWithEscaping() throws Exception {
         final DocumentReader reader = new PositionAwareDocumentReader("(a \\) b \\) c) d");
-        final String parsed = reader.parse(new ContainedTextParser("(", ")", '\\', false, false));
+        final String parsed = reader.parse(new ContainedTextParser("(", ")", '\\', false, false, null));
         Assert.assertEquals(parsed, "a ) b ) c");
     }
 
     @Test
     public void testEnclosedWithNestingWithoutEscaping() throws Exception {
         final DocumentReader reader = new PositionAwareDocumentReader("(a b\\) c) d");
-        final String parsed = reader.parse(new ContainedTextParser("(", ")", '\\', false, false));
+        final String parsed = reader.parse(new ContainedTextParser("(", ")", '\\', false, false, null));
         Assert.assertEquals(parsed, "a b) c");
     }
 
     @Test
     public void testEnclosedWithNestingWithoutAcceptingEscaping() throws Exception {
         final DocumentReader reader = new PositionAwareDocumentReader("(a b\\) c) d");
-        final String parsed = reader.parse(new ContainedTextParser("(", ")", null, false, false));
+        final String parsed = reader.parse(new ContainedTextParser("(", ")", null, false, false, null));
         Assert.assertEquals(parsed, "a b\\");
     }
 
     @Test
     public void testEnclosedWithNestingWithEscaping() throws Exception {
         final DocumentReader reader = new PositionAwareDocumentReader("(a (b \\) c)\\) d)");
-        final String parsed = reader.parse(new ContainedTextParser("(", ")", '\\', false, true));
+        final String parsed = reader.parse(new ContainedTextParser("(", ")", '\\', false, true, null));
         Assert.assertEquals(parsed, "a (b \\) c)) d");
     }
 
-    @Test(expectedExceptions = MissingExpectedTokenException.class)
+    @Test(expectedExceptions = MissingExpectedTokenError.class)
     public void testUnenclosedWithoutAccepting() throws Exception {
         final DocumentReader reader = new PositionAwareDocumentReader("hello");
-        reader.parse(new ContainedTextParser("(", ")", '\\', false, false));
+        reader.parse(new ContainedTextParser("(", ")", '\\', false, false, null));
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -90,10 +92,18 @@ public class ContainedTextParserTest {
         new ContainedTextParser("", "1");
     }
 
-    @Test(expectedExceptions = MissingExpectedTokenException.class)
+    @Test(expectedExceptions = MissingExpectedTokenError.class)
     public void testMissingClosingChar() throws Exception {
         DocumentReader reader = new PositionAwareDocumentReader("(abc");
         reader.parse(new ContainedTextParser("(", ")"));
+    }
+
+    @Test
+    public void testCustomTokenDesignator() throws Exception {
+        final ContainedTextParser parser = new ContainedTextParser("(", ")", new PatternTokenDesignator(Pattern.compile("\\d+\\s+\\d+")));
+        final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("1 34 bcd");
+        final String parsed = parser.parse(reader);
+        Assert.assertEquals(parsed, "1 34");
     }
 
 }

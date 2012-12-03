@@ -53,7 +53,14 @@ public interface DocumentReader {
      * This method will determine if another token can be found in the document
      * @return <code>true</code> if anything other than whitespace characters exist within the rest of the document
      */
-    boolean hasNext();
+    boolean hasTokens();
+
+    /**
+     * This method will determine if another token can be found in the document
+     * @param tokenDesignator    the token designator for discovering tokens
+     * @return <code>true</code> if anything other than whitespace characters exist within the rest of the document
+     */
+    boolean hasTokens(TokenDesignator tokenDesignator);
 
     /**
      * Determines whether we have hit the end of the document or not
@@ -76,13 +83,24 @@ public interface DocumentReader {
 
     /**
      * Will give the next token. If no tokens can be found, the method will either take further action
-     * to fix this, or throw an Exception. You can confer {@link #hasNext()} to see if another token exists
+     * to fix this, or throw an Exception. You can confer {@link #hasTokens} to see if another token exists
      * in the document.<br/>
      * <strong>NB</strong> This method will attempt to read the <em>first</em> identifiable token, meaning
      * that if one token is the prefix of another, then the first will be discovered.
      * @return next token (if any can be found)
      */
     String nextToken();
+
+    /**
+     * Will give the next token. If no tokens can be found, the method will either take further action
+     * to fix this, or throw an Exception. You can confer {@link #hasTokens} to see if another token exists
+     * in the document.<br/>
+     * <strong>NB</strong> This method will attempt to read the <em>first</em> identifiable token, meaning
+     * that if one token is the prefix of another, then the first will be discovered.
+     * @param tokenDesignator       the token designator
+     * @return next token (if any can be found)
+     */
+    String nextToken(TokenDesignator tokenDesignator);
 
     /**
      * Will attempt to read the string matching the given parameter. If the string matched with this pattern

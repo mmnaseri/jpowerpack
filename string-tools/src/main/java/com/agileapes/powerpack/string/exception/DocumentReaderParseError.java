@@ -12,16 +12,28 @@
  * or substantial portions of the Software.
  */
 
-package com.agileapes.powerpack.string.reader;
+package com.agileapes.powerpack.string.exception;
 
 /**
- * This interface will help reader classes to identify a token within a string.
- *
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/12/3, 17:01)
+ * @since 1.0 (2012/12/3, 18:16)
  */
-public interface TokenDesignator {
+public class DocumentReaderParseError extends DocumentReaderError {
 
-    TokenDescriptor getToken(String string);
+    private static final long serialVersionUID = -9024464646750337729L;
 
+    public DocumentReaderParseError() {
+    }
+
+    public DocumentReaderParseError(String message) {
+        super(message);
+    }
+
+    public DocumentReaderParseError(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DocumentReaderParseError(Throwable cause) {
+        super(cause);
+    }
 }

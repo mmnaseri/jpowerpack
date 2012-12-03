@@ -18,7 +18,7 @@ package com.agileapes.powerpack.string.exception;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/12/3, 17:59)
  */
-public class ReaderOverreachException extends DocumentReaderError {
+public class ReaderOverreachError extends DocumentReaderError {
 
     private static final long serialVersionUID = -4242205819850276313L;
 
