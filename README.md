@@ -15,6 +15,8 @@ types, comparing two or more beans, accessing properties within fields in any gi
 * **tools**; will contain more of round-the-block sort of utilities that will come in handy throughout your development
 life.
 
+* **string-tools**; will contain tools concerning String modification, processing, and manipulation.
+
 IDE and Tools
 -------------
 
