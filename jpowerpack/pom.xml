@@ -7,9 +7,6 @@
     <groupId>com.agileapes.powerpack</groupId>
     <artifactId>jpowerpack</artifactId>
     <version>1.0</version>
-    <modules>
-        <module>../string-tools</module>
-    </modules>
     <name>JPowerPack</name>
     <description>A Java power pack of utilities that will most likely come in handy.</description>
     <packaging>pom</packaging>
