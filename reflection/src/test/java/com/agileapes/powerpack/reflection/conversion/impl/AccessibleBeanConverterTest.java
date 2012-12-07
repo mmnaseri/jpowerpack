@@ -15,7 +15,6 @@
 package com.agileapes.powerpack.reflection.conversion.impl;
 
 import com.agileapes.powerpack.reflection.beans.impl.SerializableBeanWrapper;
-import com.agileapes.powerpack.reflection.compare.BeanComparator;
 import com.agileapes.powerpack.reflection.compare.impl.CachedBeanComparator;
 import com.agileapes.powerpack.test.model.Book;
 import org.testng.Assert;

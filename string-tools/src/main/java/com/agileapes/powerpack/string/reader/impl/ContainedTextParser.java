@@ -14,7 +14,7 @@
 
 package com.agileapes.powerpack.string.reader.impl;
 
-import com.agileapes.powerpack.string.exception.MissingExpectedTokenError;
+import com.agileapes.powerpack.string.exception.MissingExpectedTokenException;
 import com.agileapes.powerpack.string.reader.DocumentReader;
 import com.agileapes.powerpack.string.reader.SnippetParser;
 import com.agileapes.powerpack.string.reader.TokenDesignator;
@@ -73,6 +73,10 @@ public class ContainedTextParser implements SnippetParser {
         this(opening, closing, escape, true, true, null);
     }
 
+    public ContainedTextParser(String opening, String closing, Character escape, boolean acceptUnenclosed, boolean acceptNested) {
+        this(opening, closing, escape, acceptUnenclosed, acceptNested, null);
+    }
+
     public ContainedTextParser(String opening, String closing, Character escape, boolean acceptUnenclosed, boolean acceptNested, TokenDesignator tokenDesignator) {
         this.escape = escape;
         this.acceptUnenclosed = acceptUnenclosed;
@@ -123,7 +127,7 @@ public class ContainedTextParser implements SnippetParser {
                     pattern += character;
                 }
                 pattern += "]";
-                throw new MissingExpectedTokenError(pattern);
+                throw new MissingExpectedTokenException(pattern);
             }
         }
         String result = "";
@@ -132,12 +136,12 @@ public class ContainedTextParser implements SnippetParser {
         int open = 1;
         while (true) {
             if (!reader.hasMore()) {
-                throw new MissingExpectedTokenError(String.valueOf(test.getClosing()));
+                throw new MissingExpectedTokenException(String.valueOf(test.getClosing()));
             }
             final char next = reader.nextChar();
             //If an opening was found within this contained instance, then
             //we know that we have to expect a "closing" for that opening within this same instance
-            if (next == test.getOpening() && acceptNested) {
+            if (next == test.getOpening() && next != test.getClosing() && acceptNested) {
                 open ++;
             }
             if (next == test.getClosing()) {

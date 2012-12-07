@@ -17,6 +17,8 @@ life.
 
 * **string-tools**; will contain tools concerning String modification, processing, and manipulation.
 
+* **tree**; contains tools to help create, manipulate, and work with various tree data structures.
+
 IDE and Tools
 -------------
 

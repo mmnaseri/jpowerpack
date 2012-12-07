@@ -18,8 +18,6 @@ import com.agileapes.powerpack.reflection.beans.BeanWrapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ObjectInputStream;
-
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/11/17, 16:43)

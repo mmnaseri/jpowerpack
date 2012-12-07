@@ -14,7 +14,7 @@
 
 package com.agileapes.powerpack.string.reader.impl;
 
-import com.agileapes.powerpack.string.exception.ReaderOverreachError;
+import com.agileapes.powerpack.string.exception.ReaderOverreachException;
 import com.agileapes.powerpack.string.reader.DocumentReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -49,7 +49,7 @@ public class SerializableReaderSnapshotTest {
         Assert.assertEquals(reader.rest(), rest);
     }
 
-    @Test(expectedExceptions = ReaderOverreachError.class)
+    @Test(expectedExceptions = ReaderOverreachException.class)
     public void testOverreachingRestore() throws Exception {
         final SerializableReaderSnapshot abc = new SerializableReaderSnapshot("abc", 5);
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("");

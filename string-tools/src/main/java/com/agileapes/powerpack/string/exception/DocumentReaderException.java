@@ -18,22 +18,22 @@ package com.agileapes.powerpack.string.exception;
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
  * @since 1.0 (2012/12/3, 17:47)
  */
-public class DocumentReaderError extends Error {
+public class DocumentReaderException extends Error {
 
     private static final long serialVersionUID = 8257603038281219014L;
 
-    public DocumentReaderError() {
+    public DocumentReaderException() {
     }
 
-    public DocumentReaderError(String message) {
+    public DocumentReaderException(String message) {
         super(message);
     }
 
-    public DocumentReaderError(String message, Throwable cause) {
+    public DocumentReaderException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DocumentReaderError(Throwable cause) {
+    public DocumentReaderException(Throwable cause) {
         super(cause);
     }
 }

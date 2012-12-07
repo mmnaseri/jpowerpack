@@ -14,8 +14,8 @@
 
 package com.agileapes.powerpack.string.reader.impl;
 
-import com.agileapes.powerpack.string.exception.DocumentReaderError;
-import com.agileapes.powerpack.string.exception.MissingExpectedTokenError;
+import com.agileapes.powerpack.string.exception.DocumentReaderException;
+import com.agileapes.powerpack.string.exception.MissingExpectedTokenException;
 import com.agileapes.powerpack.string.reader.DocumentReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  */
 public class ContainedTextParserTest {
 
-    @Test(expectedExceptions = DocumentReaderError.class, expectedExceptionsMessageRegExp = ".*read tokens.*")
+    @Test(expectedExceptions = DocumentReaderException.class, expectedExceptionsMessageRegExp = ".*read tokens.*")
     public void testNonEnclosedWithoutDesignator() throws Exception {
         DocumentReader reader = new PositionAwareDocumentReader("abc");
         reader.parse(new ContainedTextParser("(", ")"));
@@ -76,7 +76,7 @@ public class ContainedTextParserTest {
         Assert.assertEquals(parsed, "a (b \\) c)) d");
     }
 
-    @Test(expectedExceptions = MissingExpectedTokenError.class)
+    @Test(expectedExceptions = MissingExpectedTokenException.class)
     public void testUnenclosedWithoutAccepting() throws Exception {
         final DocumentReader reader = new PositionAwareDocumentReader("hello");
         reader.parse(new ContainedTextParser("(", ")", '\\', false, false, null));
@@ -92,7 +92,7 @@ public class ContainedTextParserTest {
         new ContainedTextParser("", "1");
     }
 
-    @Test(expectedExceptions = MissingExpectedTokenError.class)
+    @Test(expectedExceptions = MissingExpectedTokenException.class)
     public void testMissingClosingChar() throws Exception {
         DocumentReader reader = new PositionAwareDocumentReader("(abc");
         reader.parse(new ContainedTextParser("(", ")"));

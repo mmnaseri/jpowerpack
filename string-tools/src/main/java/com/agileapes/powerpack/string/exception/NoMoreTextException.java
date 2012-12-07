@@ -16,10 +16,16 @@ package com.agileapes.powerpack.string.exception;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/12/3, 17:59)
+ * @since 1.0 (2012/12/3, 17:47)
  */
-public class ReaderOverreachError extends DocumentReaderError {
+public class NoMoreTextException extends DocumentReaderException {
 
-    private static final long serialVersionUID = -4242205819850276313L;
+    private static final long serialVersionUID = -1822455471711418794L;
 
+    public NoMoreTextException() {
+    }
+
+    public NoMoreTextException(String message) {
+        super(message);
+    }
 }

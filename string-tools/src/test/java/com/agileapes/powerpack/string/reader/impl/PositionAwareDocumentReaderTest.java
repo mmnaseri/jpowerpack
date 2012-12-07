@@ -52,7 +52,7 @@ public class PositionAwareDocumentReaderTest {
         Assert.assertFalse(reader.has(Pattern.compile("[a-z]")));
     }
 
-    @Test(expectedExceptions = DocumentReaderError.class)
+    @Test(expectedExceptions = DocumentReaderException.class)
     public void testHasNextWithoutDesignator() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader(" a b c");
         reader.hasTokens();
@@ -100,7 +100,7 @@ public class PositionAwareDocumentReaderTest {
         Assert.assertTrue(reader.matches(Pattern.compile("[a-z]+\\d+_\\d+\\s+hello\\s+[a-z]+")));
     }
 
-    @Test(expectedExceptions = NoMoreTextError.class)
+    @Test(expectedExceptions = NoMoreTextException.class)
     public void testNextCharWithNoMoreToGo() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("");
         reader.nextChar();
@@ -117,7 +117,7 @@ public class PositionAwareDocumentReaderTest {
         Assert.assertFalse(reader.hasMore());
     }
 
-    @Test(expectedExceptions = NoMoreTokensError.class)
+    @Test(expectedExceptions = NoMoreTokensException.class)
     public void testNextTokenWithNoMoreToGo() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("");
         reader.nextToken();
@@ -146,7 +146,7 @@ public class PositionAwareDocumentReaderTest {
         Assert.assertFalse(reader.hasTokens());
     }
 
-    @Test(expectedExceptions = NoMoreTokensError.class)
+    @Test(expectedExceptions = NoMoreTokensException.class)
     public void testNextTokenNotAvailable() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("abc", new PatternTokenDesignator(Pattern.compile("\\d+")));
         reader.nextToken();
@@ -160,13 +160,13 @@ public class PositionAwareDocumentReaderTest {
         Assert.assertEquals(reader.rest(), "abc");
     }
 
-    @Test(expectedExceptions = NoMoreTextError.class)
+    @Test(expectedExceptions = NoMoreTextException.class)
     public void testReadWithNoMoreToGo() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("");
         reader.read(Pattern.compile("\\d+"), true);
     }
 
-    @Test(expectedExceptions = NoMoreTextError.class)
+    @Test(expectedExceptions = NoMoreTextException.class)
     public void testExpectWithNoMoreToGo() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("");
         reader.expect(Pattern.compile("\\d+"), true);
@@ -180,19 +180,19 @@ public class PositionAwareDocumentReaderTest {
         Assert.assertEquals(reader.rest(), "abc");
     }
 
-    @Test(expectedExceptions = MissingExpectedTokenError.class)
+    @Test(expectedExceptions = MissingExpectedTokenException.class)
     public void testExpectationsUnfulfilled() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("testing");
         reader.expect(Pattern.compile("\\d+"), true);
     }
 
-    @Test(expectedExceptions = ReaderOverreachError.class)
+    @Test(expectedExceptions = ReaderOverreachException.class)
     public void testOverreachingTake() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("");
         reader.take(1);
     }
 
-    @Test(expectedExceptions = ReaderOverreachError.class)
+    @Test(expectedExceptions = ReaderOverreachException.class)
     public void testOverreachingPeek() throws Exception {
         final PositionAwareDocumentReader reader = new PositionAwareDocumentReader("");
         reader.peek(1);

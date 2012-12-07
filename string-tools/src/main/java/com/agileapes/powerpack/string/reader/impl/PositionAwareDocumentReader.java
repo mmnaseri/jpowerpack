@@ -69,6 +69,11 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     }
 
     @Override
+    public boolean has(String pattern) {
+        return has(Pattern.compile(pattern));
+    }
+
+    @Override
     public boolean hasTokens() {
         return hasTokens(tokenDesignator);
     }
@@ -76,7 +81,7 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     @Override
     public boolean hasTokens(TokenDesignator tokenDesignator) {
         if (tokenDesignator == null) {
-            throw new DocumentReaderError("The document reader does not know how to read tokens");
+            throw new DocumentReaderException("The document reader does not know how to read tokens");
         }
         for (int i = cursor; i < document.length() - 1; i ++) {
             if (tokenDesignator.getToken(document.substring(cursor, i + 1)) != null) {
@@ -97,9 +102,14 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     }
 
     @Override
+    public boolean matches(String pattern) {
+        return matches(Pattern.compile(pattern));
+    }
+
+    @Override
     public char nextChar() {
         if (!hasMore()) {
-            throw new NoMoreTextError();
+            throw new NoMoreTextException();
         }
         final char result = rest().charAt(0);
         positionHandler.readChar();
@@ -118,15 +128,15 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     @Override
     public String nextToken(TokenDesignator tokenDesignator) {
         if (!hasMore()) {
-            throw new NoMoreTokensError();
+            throw new NoMoreTokensException();
         }
         if (tokenDesignator == null) {
-            throw new DocumentReaderError("The document reader does not know how to read tokens");
+            throw new DocumentReaderException("The document reader does not know how to read tokens");
         }
         final String rest = rest();
         final TokenDescriptor token = tokenDesignator.getToken(rest);
         if (token == null) {
-            throw new NoMoreTokensError();
+            throw new NoMoreTokensException();
         } else {
             final String result = rest.substring(0, token.getOffset() + token.getLength());
             cursor += result.length();
@@ -136,9 +146,41 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     }
 
     @Override
+    public String nextToken(Pattern... delimiters) {
+        String result = "";
+        while (true) {
+            boolean done = false;
+            for (Pattern delimiter : delimiters) {
+                final Matcher matcher = delimiter.matcher(rest().substring(result.length()));
+                if (matcher.find() && matcher.start() == 0) {
+                    done = true;
+                    break;
+                }
+            }
+            if (done || result.equals(rest())) {
+                break;
+            }
+            result += rest().charAt(result.length());
+        }
+        cursor += result.length();
+        positionHandler.readString(result);
+        return result;
+    }
+
+    @Override
+    public String nextToken(String... delimiters) {
+        final Pattern[] patterns = new Pattern[delimiters.length];
+        for (int i = 0; i < delimiters.length; i++) {
+            String delimiter = delimiters[i];
+            patterns[i] = Pattern.compile(delimiter);
+        }
+        return nextToken(patterns);
+    }
+
+    @Override
     public String read(Pattern pattern, boolean skipWhitespaces) {
         if (!hasMore()) {
-            throw new NoMoreTextError();
+            throw new NoMoreTextException();
         }
         if (skipWhitespaces) {
             skip(WHITESPACE);
@@ -154,15 +196,25 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     }
 
     @Override
+    public String read(String pattern, boolean skipWhitespaces) {
+        return read(Pattern.compile(pattern), skipWhitespaces);
+    }
+
+    @Override
     public String expect(Pattern pattern, boolean skipWhitespaces) {
         if (!hasMore()) {
-            throw new NoMoreTextError();
+            throw new NoMoreTextException();
         }
         final String result = read(pattern, skipWhitespaces);
         if (result == null) {
-            throw new MissingExpectedTokenError(pattern);
+            throw new MissingExpectedTokenException(pattern);
         }
         return result;
+    }
+
+    @Override
+    public String expect(String pattern, boolean skipWhitespaces) {
+        return expect(Pattern.compile(pattern), skipWhitespaces);
     }
 
     @Override
@@ -191,7 +243,7 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
         document = snapshot.getDocument();
         cursor = snapshot.getCursor();
         if (cursor > document.length()) {
-            throw new ReaderOverreachError();
+            throw new ReaderOverreachException();
         }
         positionHandler.reset();
         positionHandler.readString(taken());
@@ -201,7 +253,7 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     public void take(int offset) {
         cursor += offset;
         if (cursor > document.length()) {
-            throw new ReaderOverreachError();
+            throw new ReaderOverreachException();
         }
     }
 
@@ -209,7 +261,7 @@ public class PositionAwareDocumentReader implements DocumentReader, PositionAwar
     public String peek(int length) {
         final String rest = rest();
         if (length > rest.length()) {
-            throw new ReaderOverreachError();
+            throw new ReaderOverreachException();
         }
         return rest.substring(0, length);
     }

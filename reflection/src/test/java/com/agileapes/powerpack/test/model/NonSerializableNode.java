@@ -15,7 +15,6 @@
 package com.agileapes.powerpack.test.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 /**

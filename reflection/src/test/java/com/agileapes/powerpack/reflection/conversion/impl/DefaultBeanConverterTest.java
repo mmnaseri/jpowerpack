@@ -14,7 +14,6 @@
 
 package com.agileapes.powerpack.reflection.conversion.impl;
 
-import com.agileapes.powerpack.reflection.beans.impl.AccessorBeanWrapper;
 import com.agileapes.powerpack.reflection.beans.impl.MappedBeanWrapper;
 import com.agileapes.powerpack.test.model.Book;
 import com.agileapes.powerpack.tools.collections.CollectionUtils;

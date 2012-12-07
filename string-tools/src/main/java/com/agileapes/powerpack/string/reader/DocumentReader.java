@@ -50,6 +50,13 @@ public interface DocumentReader {
     boolean has(Pattern pattern);
 
     /**
+     * This method will determine whether the indicated pattern can be found at this point in the document or not
+     * @param pattern    the lookup pattern
+     * @return <code>true</code> if the pattern can be found
+     */
+    boolean has(String pattern);
+
+    /**
      * This method will determine if another token can be found in the document
      * @return <code>true</code> if anything other than whitespace characters exist within the rest of the document
      */
@@ -74,6 +81,13 @@ public interface DocumentReader {
      * @return <code>true</code> if the document can be probed for the given regular expression
      */
     boolean matches(Pattern pattern);
+
+    /**
+     * Will determine whether the rest of the document matches the given regular expression
+     * @param pattern    the query regular expression
+     * @return <code>true</code> if the document can be probed for the given regular expression
+     */
+    boolean matches(String pattern);
 
     /**
      * Will return the next character
@@ -103,6 +117,28 @@ public interface DocumentReader {
     String nextToken(TokenDesignator tokenDesignator);
 
     /**
+     * Will give the next token. If no tokens can be found, the method will either take further action
+     * to fix this, or throw an Exception. You can confer {@link #hasTokens} to see if another token exists
+     * in the document.<br/>
+     * <strong>NB</strong> This method will attempt to read the <em>first</em> identifiable token, meaning
+     * that if one token is the prefix of another, then the first will be discovered.
+     * @param delimiters       the delimiters
+     * @return next token (if any can be found)
+     */
+    String nextToken(Pattern ... delimiters);
+
+    /**
+     * Will give the next token. If no tokens can be found, the method will either take further action
+     * to fix this, or throw an Exception. You can confer {@link #hasTokens} to see if another token exists
+     * in the document.<br/>
+     * <strong>NB</strong> This method will attempt to read the <em>first</em> identifiable token, meaning
+     * that if one token is the prefix of another, then the first will be discovered.
+     * @param delimiters       the delimiters
+     * @return next token (if any can be found)
+     */
+    String nextToken(String ... delimiters);
+
+    /**
      * Will attempt to read the string matching the given parameter. If the string matched with this pattern
      * does not start at the current point in the document, the result will be considered to be negative.
      * @param pattern            the compiled pattern to be matched against
@@ -115,6 +151,18 @@ public interface DocumentReader {
     String read(Pattern pattern, boolean skipWhitespaces);
 
     /**
+     * Will attempt to read the string matching the given parameter. If the string matched with this pattern
+     * does not start at the current point in the document, the result will be considered to be negative.
+     * @param pattern            the compiled pattern to be matched against
+     * @param skipWhitespaces    will cause a call to {@link #skip(java.util.regex.Pattern)} with whitespace pattern
+     *                           before going forth
+     * @return the string read by the method, or <code>null</code> if it cannot be found
+     * @see Pattern#compile(String)
+     * @see Pattern#compile(String, int)
+     */
+    String read(String pattern, boolean skipWhitespaces);
+
+    /**
      * This will attempt to read string matching the given pattern from the document at the current point
      * indicated by the cursor. If failed to do so, the method will be expected to throw an exception or take corrective measures.
      * @param pattern            the regular to query for
@@ -123,6 +171,16 @@ public interface DocumentReader {
      * @return the read string
      */
     String expect(Pattern pattern, boolean skipWhitespaces);
+
+    /**
+     * This will attempt to read string matching the given pattern from the document at the current point
+     * indicated by the cursor. If failed to do so, the method will be expected to throw an exception or take corrective measures.
+     * @param pattern            the regular to query for
+     * @param skipWhitespaces    will cause a call to {@link #skip(java.util.regex.Pattern)} with whitespace pattern
+     *                           before going forth
+     * @return the read string
+     */
+    String expect(String pattern, boolean skipWhitespaces);
 
     /**
      * This will cause the state of the reading to be reset. The cursor will be set back to the beginning of the document,

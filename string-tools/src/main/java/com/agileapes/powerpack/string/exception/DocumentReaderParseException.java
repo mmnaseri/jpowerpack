@@ -16,16 +16,24 @@ package com.agileapes.powerpack.string.exception;
 
 /**
  * @author Mohammad Milad Naseri (m.m.naseri@gmail.com)
- * @since 1.0 (2012/12/3, 17:49)
+ * @since 1.0 (2012/12/3, 18:16)
  */
-public class NoMoreTokensError extends NoMoreTextError {
+public class DocumentReaderParseException extends DocumentReaderException {
 
-    private static final long serialVersionUID = -6423879082695533730L;
+    private static final long serialVersionUID = -9024464646750337729L;
 
-    public NoMoreTokensError() {
+    public DocumentReaderParseException() {
     }
 
-    public NoMoreTokensError(String message) {
+    public DocumentReaderParseException(String message) {
         super(message);
+    }
+
+    public DocumentReaderParseException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DocumentReaderParseException(Throwable cause) {
+        super(cause);
     }
 }
